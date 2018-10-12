@@ -1,0 +1,13 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+	{
+	"label": "build-game",
+	"type": "npm",
+	"script": "build",		// 調用package.json中的脚本名稱
+	"problemMatcher": []
+	}
+	]
+	}
