@@ -26977,14 +26977,10 @@ class MeshRenderSystem extends ash_1.ListIteratingSystem {
         babylonjs_1.SceneLoader.ImportMesh("", node.mesh.GetResPath(), node.mesh.GetMeshName(), scene, function (newMeshes) {
             var meshModel = newMeshes[0];
             if (meshModel != null) {
-                var pbrMetMat = new babylonjs_1.PBRMetallicRoughnessMaterial("pbrmet", scene);
-                pbrMetMat.wireframe = false;
-                pbrMetMat.doubleSided = true;
-                pbrMetMat.baseTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene);
-                pbrMetMat.normalTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene);
-                pbrMetMat.metallicRoughnessTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene);
-                pbrMetMat.emissiveTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + "DamagedHelmet_emissiveTexture.jpg", scene);
-                pbrMetMat.occlusionTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + "Default_AO.jpg", scene);
+                var pbrMetMat = new babylonjs_1.PBRMaterial("pbr", scene);
+                pbrMetMat.albedoTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene);
+                pbrMetMat.bumpTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene);
+                pbrMetMat.metallicTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene);
                 meshModel.material = pbrMetMat;
                 meshModel.position.x = node.pos.GetPositionX();
                 meshModel.position.y = node.pos.GetPositionY();
@@ -27024,7 +27020,7 @@ const ash_1 = __webpack_require__(/*! ./ash */ "./src/ash/index.ts");
 let ecs = new ash_1.Engine();
 SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize(ecs);
-EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "DamagedHelmet.obj", "Default_albedo.jpg", "Default_normal.jpg", "Default_metalRoughness.jpg", "environment.dds");
+EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "male_sd_0001_head_basecolor.bmp", "male_sd_0001_head_ddna.bmp", "male_sd_0001_head_metrough.bmp", "environment.dds");
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     ecs.update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
     SceneManager_1.SceneManager.GetInstance().Update();
@@ -27102,8 +27098,12 @@ class SceneManager {
         camTarget.y = 5;
         this.m_camera = new babylonjs_1.ArcRotateCamera("Camera", 0, Math.PI / 10, 10, camTarget, this.m_scene);
         this.m_camera.attachControl(canvas, true);
-        this.m_camera.setTarget(new babylonjs_1.Vector3(0, 0, 0));
-        var light1 = new babylonjs_1.HemisphericLight("light1", new babylonjs_1.Vector3(1, 10, 0), this.m_scene);
+        this.m_camera.setTarget(new babylonjs_1.Vector3(0, 40, 0));
+        this.m_camera.wheelDeltaPercentage /= 5;
+        var light1 = new babylonjs_1.DirectionalLight("light1", new babylonjs_1.Vector3(1, -1, 0), this.m_scene);
+        var light2 = new babylonjs_1.DirectionalLight("light2", new babylonjs_1.Vector3(1, 0, 0), this.m_scene);
+        var light2 = new babylonjs_1.DirectionalLight("light3", new babylonjs_1.Vector3(1, 0, 1), this.m_scene);
+        light1.diffuse = new BABYLON.Color3(10, 10, 10);
     }
     GetScene() {
         return this.m_scene;

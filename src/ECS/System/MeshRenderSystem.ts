@@ -2,7 +2,7 @@ import { ListIteratingSystem } from '../../ash';
 import { MeshRenderNode } from '../Nodes/MeshRenderNode';
 import { SceneManager } from '../../Manager/SceneManager';
 import 'babylonjs-loaders';
-import { SceneLoader, PBRMetallicRoughnessMaterial, Texture } from 'babylonjs';
+import { SceneLoader, PBRMetallicRoughnessMaterial, Texture, Color3 } from 'babylonjs';
 
 export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
 {
@@ -35,8 +35,9 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
                 pbrMetMat.normalTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene );
                 pbrMetMat.metallicRoughnessTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene );
                 //pbrMetMat.environmentTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetEnvironmentTexture(), scene );
-                pbrMetMat.emissiveTexture = new Texture( node.mesh.GetResPath() + "DamagedHelmet_emissiveTexture.jpg", scene );
-                pbrMetMat.occlusionTexture = new Texture( node.mesh.GetResPath() + "Default_AO.jpg", scene );
+                //pbrMetMat.emissiveColor = new Color3( 10, 10, 10 );
+                //pbrMetMat.emissiveTexture = new Texture( node.mesh.GetResPath() + "Default_emissive.jpg", scene );
+                //pbrMetMat.occlusionTexture = new Texture( node.mesh.GetResPath() + "Default_AO.jpg", scene );
 
 
                 meshModel.material = pbrMetMat;
