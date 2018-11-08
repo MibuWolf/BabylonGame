@@ -38,6 +38,8 @@ export class SceneManager
         var light2: BABYLON.DirectionalLight = new DirectionalLight( "light2", new Vector3( 1, 0, 0 ), this.m_scene );
         var light2: DirectionalLight = new DirectionalLight( "light3", new Vector3( 1, 0, 1 ), this.m_scene );
         light1.diffuse = new BABYLON.Color3( 10, 10, 10 );
+
+        this.m_scene.debugLayer.show();
     }
 
     public GetScene(): Scene

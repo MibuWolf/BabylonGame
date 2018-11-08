@@ -26977,10 +26977,12 @@ class MeshRenderSystem extends ash_1.ListIteratingSystem {
         babylonjs_1.SceneLoader.ImportMesh("", node.mesh.GetResPath(), node.mesh.GetMeshName(), scene, function (newMeshes) {
             var meshModel = newMeshes[0];
             if (meshModel != null) {
-                var pbrMetMat = new babylonjs_1.PBRMaterial("pbr", scene);
-                pbrMetMat.albedoTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene);
-                pbrMetMat.bumpTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene);
-                pbrMetMat.metallicTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene);
+                var pbrMetMat = new babylonjs_1.PBRMetallicRoughnessMaterial("pbrmet", scene);
+                pbrMetMat.wireframe = false;
+                pbrMetMat.doubleSided = true;
+                pbrMetMat.baseTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene);
+                pbrMetMat.normalTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene);
+                pbrMetMat.metallicRoughnessTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene);
                 meshModel.material = pbrMetMat;
                 meshModel.position.x = node.pos.GetPositionX();
                 meshModel.position.y = node.pos.GetPositionY();
@@ -27104,6 +27106,7 @@ class SceneManager {
         var light2 = new babylonjs_1.DirectionalLight("light2", new babylonjs_1.Vector3(1, 0, 0), this.m_scene);
         var light2 = new babylonjs_1.DirectionalLight("light3", new babylonjs_1.Vector3(1, 0, 1), this.m_scene);
         light1.diffuse = new BABYLON.Color3(10, 10, 10);
+        this.m_scene.debugLayer.show();
     }
     GetScene() {
         return this.m_scene;
