@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "noResolve": false,
         "noImplicitAny": false,
@@ -12,12 +12,16 @@
         "lib": [
             "dom",
             "es2015.promise",
-            "es5"
+            "es6"
         ],
         "declaration": true,
         "outDir": "./dist"
     },
     "files": [
         "./src/Game.ts"
-    ]
+    ],
+    "types": [
+        "babylonjs",
+        "babylonjs-loaders",
+    ],
 }

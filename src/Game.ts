@@ -1,24 +1,22 @@
-import * as BABYLON from 'babylonjs';
-import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, MeshBuilder, Mesh } from "babylonjs";
+import { SceneManager } from './Manager/SceneManager';
+import { EntityManager } from './Manager/EntityManager';
+import { Engine } from './ash';
 
-var canvas: any = document.getElementById("renderCanvas");
-var engine: Engine = new Engine(canvas, true);
+let ecs: Engine = new Engine();
 
-function createScene(): Scene {
-    var scene: Scene = new Scene(engine);
+SceneManager.GetInstance().Initialize();
+EntityManager.GetInstance().Initialize( ecs );
 
-    var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), scene);
-    camera.attachControl(canvas, true);
+// EntityManager.GetInstance().CreateMeshEntity( "http://172.16.1.110/dist/Asset/", "head.obj", "male_sd_0001_head_basecolor.bmp", "male_sd_0001_head_ddna.bmp",
+//     "male_sd_0001_head_metrough.bmp", "environment.dds" )
+EntityManager.GetInstance().CreateMeshEntity( "http://172.16.1.110/dist/Asset/", "DamagedHelmet.obj", "Default_albedo.jpg", "Default_normal.jpg",
+    "Default_metalRoughness.jpg", "environment.dds" )
 
-    var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-
-    var sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
-
-    return scene;
+SceneManager.GetInstance().GetEngine().runRenderLoop( () =>
+{
+    ecs.update( SceneManager.GetInstance().GetEngine().getDeltaTime() );
+    SceneManager.GetInstance().Update();
 }
 
-var scene: Scene = createScene();
 
-engine.runRenderLoop(() => {
-    scene.render();
-});
+);
