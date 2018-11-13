@@ -2,7 +2,7 @@ import { ListIteratingSystem } from '../../ash';
 import { MeshRenderNode } from '../Nodes/MeshRenderNode';
 import { SceneManager } from '../../Manager/SceneManager';
 import 'babylonjs-loaders';
-import { SceneLoader, PBRMetallicRoughnessMaterial, Texture, Color3 } from 'babylonjs';
+import { SceneLoader } from 'babylonjs';
 
 export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
 {
@@ -10,8 +10,7 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
     {
         super( MeshRenderNode );
     }
-
-    public nodeAdded( node: MeshRenderNode ): void
+    protected nodeAdded = ( node: MeshRenderNode ): void =>
     {
         var scene = SceneManager.GetInstance().GetScene();
 
@@ -21,30 +20,30 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
             return;
         }
 
-        SceneLoader.ImportMesh( "", node.mesh.GetResPath(), node.mesh.GetMeshName(), scene, function ( newMeshes )
+        SceneLoader.ImportMesh( "", node.mesh.resPath, node.mesh.meshName, scene, function ( newMeshes )
         {
-
             var meshModel = newMeshes[ 0 ];
 
             if ( meshModel != null )
             {
-                var pbrMetMat = new PBRMetallicRoughnessMaterial( "pbrmet", scene );
-                pbrMetMat.wireframe = false;
-                pbrMetMat.doubleSided = true;
-                pbrMetMat.baseTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene );
-                pbrMetMat.normalTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene );
-                pbrMetMat.metallicRoughnessTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene );
-                //pbrMetMat.environmentTexture = new Texture( node.mesh.GetResPath() + node.mesh.GetEnvironmentTexture(), scene );
-                //pbrMetMat.emissiveColor = new Color3( 10, 10, 10 );
-                //pbrMetMat.emissiveTexture = new Texture( node.mesh.GetResPath() + "Default_emissive.jpg", scene );
-                //pbrMetMat.occlusionTexture = new Texture( node.mesh.GetResPath() + "Default_AO.jpg", scene );
+                if ( node.mesh.subMeshs = null )
+                {
+                    node.mesh.subMeshs.length = 0;
+                    node.mesh.subMeshs = null;
+                }
 
+                node.mesh.subMeshs = new Array<string>( meshModel.subMeshes.length );
 
-                meshModel.material = pbrMetMat;
-                meshModel.position.x = node.pos.GetPositionX();
-                meshModel.position.y = node.pos.GetPositionY();
-                meshModel.position.z = node.pos.GetPositionZ();
-                node.mesh.SetMeshModel( meshModel );
+                for ( let index = 0; index < meshModel.subMeshes.length; index++ )
+                {
+                    node.mesh.subMeshs[ index ] = meshModel.subMeshes[ index ].getMesh().name;
+                }
+
+                meshModel.position.x = node.pos.posX
+                meshModel.position.y = node.pos.posY;
+                meshModel.position.z = node.pos.posZ;
+                node.mesh.mesh = meshModel;
+
             }
             else
             {
@@ -61,9 +60,16 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
         );
     }
 
-    public nodeRemoved( node: MeshRenderNode ): void
-    {
 
+    protected nodeRemoved = ( node: MeshRenderNode ): void =>
+    {
+        node.mesh.subMeshs.length = 0;
+
+        if ( node.mesh.mesh == null )
+            return;
+
+        node.mesh.mesh.dispose( false, true );
+        node.mesh.mesh = null;
     }
     public updateNode( node: MeshRenderNode, delta: number ): void { }
 }

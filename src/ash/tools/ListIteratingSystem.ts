@@ -29,7 +29,8 @@ export abstract class ListIteratingSystem<TNode extends Node<TNode>> extends Sys
 {
   protected nodeList: NodeList<TNode> | null = null;
   protected nodeClass: NodeClassType<TNode>;
-
+  protected nodeAdded?: ( node: Node<TNode> ) => void;
+  protected nodeRemoved?: ( node: Node<TNode> ) => void;
   constructor( nodeClass: NodeClassType<TNode> )
   {
     super();
@@ -67,10 +68,6 @@ export abstract class ListIteratingSystem<TNode extends Node<TNode>> extends Sys
     this.nodeList = null;
   }
 
-
-  abstract nodeAdded( node: Node<TNode> ): void;
-
-  abstract nodeRemoved( node: Node<TNode> ): void;
 
   public update( time: number ): void
   {

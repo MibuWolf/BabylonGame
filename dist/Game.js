@@ -26830,48 +26830,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class MeshComponent {
     constructor() {
     }
-    Initialize(_resPath = "", _meshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _mesh = null) {
+    Initialize(_resPath = "", _meshName = "", _mesh = null) {
         this.resPath = _resPath;
         this.meshName = _meshName;
-        this.baseTex = _baseTex;
-        this.normalTex = _normalTex;
-        this.metroughTex = _metroughTex;
-        this.environmentTex = _environmentTex;
         this.mesh = _mesh;
-    }
-    SetMeshName(path, resName) {
-        this.resPath = path;
-        this.meshName = resName;
-    }
-    SetTexture(_baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "") {
-        this.baseTex = _baseTex;
-        this.normalTex = _normalTex;
-        this.metroughTex = _metroughTex;
-        this.environmentTex = _environmentTex;
-    }
-    SetMeshModel(_mesh) {
-        this.mesh = _mesh;
-    }
-    GetResPath() {
-        return this.resPath;
-    }
-    GetMeshName() {
-        return this.meshName;
-    }
-    GetBaseTexture() {
-        return this.baseTex;
-    }
-    GetNormalTexture() {
-        return this.normalTex;
-    }
-    GetMetroughTexture() {
-        return this.metroughTex;
-    }
-    GetEnvironmentTexture() {
-        return this.environmentTex;
-    }
-    GetMeshModel() {
-        return this.mesh;
     }
 }
 exports.MeshComponent = MeshComponent;
@@ -26897,22 +26859,42 @@ class PostionComponent {
         this.posY = y;
         this.posZ = z;
     }
-    GetPositionX() {
-        return this.posX;
-    }
-    GetPositionY() {
-        return this.posY;
-    }
-    GetPositionZ() {
-        return this.posZ;
-    }
-    SetPosition(x, y, z) {
-        this.posX = x;
-        this.posY = y;
-        this.posZ = z;
-    }
 }
 exports.PostionComponent = PostionComponent;
+
+
+/***/ }),
+
+/***/ "./src/ECS/Component/TextureComponent.ts":
+/*!***********************************************!*\
+  !*** ./src/ECS/Component/TextureComponent.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const TextureData_1 = __webpack_require__(/*! ../VO/TextureData */ "./src/ECS/VO/TextureData.ts");
+class TextureComponent {
+    constructor() {
+        this.texs = new Map();
+        this.needUpdate = false;
+    }
+    SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _environmentTexPath = "", _colorIDTexPath = "", _colorIDTex = null) {
+        let texData = new TextureData_1.TextureData();
+        texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath, _colorIDTexPath, _colorIDTex);
+        this.texs.set(_subMeshName, texData);
+        this.needUpdate = true;
+    }
+    GetTextureData(_subMeshName) {
+        if (!this.texs.has(_subMeshName))
+            return null;
+        let texData = this.texs.get(_subMeshName);
+        return texData;
+    }
+}
+exports.TextureComponent = TextureComponent;
 
 
 /***/ }),
@@ -26949,6 +26931,38 @@ exports.MeshRenderNode = MeshRenderNode;
 
 /***/ }),
 
+/***/ "./src/ECS/Nodes/TextureNode.ts":
+/*!**************************************!*\
+  !*** ./src/ECS/Nodes/TextureNode.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const ash_1 = __webpack_require__(/*! ../../ash */ "./src/ash/index.ts");
+const MeshComponent_1 = __webpack_require__(/*! ../Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
+const TextureComponent_1 = __webpack_require__(/*! ../Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
+class TextureNode extends ash_1.Node {
+}
+__decorate([
+    ash_1.keep(MeshComponent_1.MeshComponent)
+], TextureNode.prototype, "mesh", void 0);
+__decorate([
+    ash_1.keep(TextureComponent_1.TextureComponent)
+], TextureNode.prototype, "texture", void 0);
+exports.TextureNode = TextureNode;
+
+
+/***/ }),
+
 /***/ "./src/ECS/System/MeshRenderSystem.ts":
 /*!********************************************!*\
   !*** ./src/ECS/System/MeshRenderSystem.ts ***!
@@ -26967,41 +26981,180 @@ const babylonjs_1 = __webpack_require__(/*! babylonjs */ "./node_modules/babylon
 class MeshRenderSystem extends ash_1.ListIteratingSystem {
     constructor() {
         super(MeshRenderNode_1.MeshRenderNode);
-    }
-    nodeAdded(node) {
-        var scene = SceneManager_1.SceneManager.GetInstance().GetScene();
-        if (scene == null) {
-            console.log("SceneManaer is Not init!");
-            return;
-        }
-        babylonjs_1.SceneLoader.ImportMesh("", node.mesh.GetResPath(), node.mesh.GetMeshName(), scene, function (newMeshes) {
-            var meshModel = newMeshes[0];
-            if (meshModel != null) {
-                var pbrMetMat = new babylonjs_1.PBRMetallicRoughnessMaterial("pbrmet", scene);
-                pbrMetMat.wireframe = false;
-                pbrMetMat.doubleSided = true;
-                pbrMetMat.baseTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetBaseTexture(), scene);
-                pbrMetMat.normalTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetNormalTexture(), scene);
-                pbrMetMat.metallicRoughnessTexture = new babylonjs_1.Texture(node.mesh.GetResPath() + node.mesh.GetMetroughTexture(), scene);
-                meshModel.material = pbrMetMat;
-                meshModel.position.x = node.pos.GetPositionX();
-                meshModel.position.y = node.pos.GetPositionY();
-                meshModel.position.z = node.pos.GetPositionZ();
-                node.mesh.SetMeshModel(meshModel);
+        this.nodeAdded = (node) => {
+            var scene = SceneManager_1.SceneManager.GetInstance().GetScene();
+            if (scene == null) {
+                console.log("SceneManaer is Not init!");
+                return;
             }
-            else {
-                console.log("Cannot Find Mesh!");
-            }
-        }, function (eve) { }, function (scene, message, exc) {
-            console.log(message);
-            console.log(exc);
-        });
-    }
-    nodeRemoved(node) {
+            babylonjs_1.SceneLoader.ImportMesh("", node.mesh.resPath, node.mesh.meshName, scene, function (newMeshes) {
+                var meshModel = newMeshes[0];
+                if (meshModel != null) {
+                    if (node.mesh.subMeshs = null) {
+                        node.mesh.subMeshs.length = 0;
+                        node.mesh.subMeshs = null;
+                    }
+                    node.mesh.subMeshs = new Array(meshModel.subMeshes.length);
+                    for (let index = 0; index < meshModel.subMeshes.length; index++) {
+                        node.mesh.subMeshs[index] = meshModel.subMeshes[index].getMesh().name;
+                    }
+                    meshModel.position.x = node.pos.posX;
+                    meshModel.position.y = node.pos.posY;
+                    meshModel.position.z = node.pos.posZ;
+                    node.mesh.mesh = meshModel;
+                }
+                else {
+                    console.log("Cannot Find Mesh!");
+                }
+            }, function (eve) { }, function (scene, message, exc) {
+                console.log(message);
+                console.log(exc);
+            });
+        };
+        this.nodeRemoved = (node) => {
+            node.mesh.subMeshs.length = 0;
+            if (node.mesh.mesh == null)
+                return;
+            node.mesh.mesh.dispose(false, true);
+            node.mesh.mesh = null;
+        };
     }
     updateNode(node, delta) { }
 }
 exports.MeshRenderSystem = MeshRenderSystem;
+
+
+/***/ }),
+
+/***/ "./src/ECS/System/TextureRenderSystem.ts":
+/*!***********************************************!*\
+  !*** ./src/ECS/System/TextureRenderSystem.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const ash_1 = __webpack_require__(/*! ../../ash */ "./src/ash/index.ts");
+const TextureNode_1 = __webpack_require__(/*! ../Nodes/TextureNode */ "./src/ECS/Nodes/TextureNode.ts");
+const SceneManager_1 = __webpack_require__(/*! ../../Manager/SceneManager */ "./src/Manager/SceneManager.ts");
+__webpack_require__(/*! babylonjs-loaders */ "./node_modules/babylonjs-loaders/babylonjs.loaders.min.js");
+const babylonjs_1 = __webpack_require__(/*! babylonjs */ "./node_modules/babylonjs/babylon.js");
+class TextureRenderSystem extends ash_1.ListIteratingSystem {
+    constructor() {
+        super(TextureNode_1.TextureNode);
+        this.nodeAdded = (node) => {
+            var scene = SceneManager_1.SceneManager.GetInstance().GetScene();
+            if (scene == null) {
+                console.log("SceneManaer is Not init!");
+                return;
+            }
+            this.updateTexture(node);
+        };
+        this.nodeRemoved = (node) => {
+            if (node.mesh.mesh != null) {
+                let subMeshCount = node.mesh.mesh.subMeshes.length;
+                for (let index = 0; index < subMeshCount; index++) {
+                    let subMesh = node.mesh.mesh.subMeshes[index];
+                    if (subMesh == null || subMesh.getMesh() == null)
+                        continue;
+                    let mesh = subMesh.getMesh();
+                    if (mesh == null)
+                        continue;
+                    let pbrMaterial = mesh.material;
+                    if (pbrMaterial.baseTexture != null)
+                        pbrMaterial.baseTexture.dispose();
+                    if (pbrMaterial.normalTexture != null)
+                        pbrMaterial.normalTexture.dispose();
+                    if (pbrMaterial.metallicRoughnessTexture != null)
+                        pbrMaterial.metallicRoughnessTexture.dispose();
+                    if (pbrMaterial.environmentTexture != null)
+                        pbrMaterial.environmentTexture.dispose();
+                    let texData = node.texture.GetTextureData(mesh.name);
+                    if (texData != null && texData.colorIDTex != null) {
+                        texData.colorIDTex.dispose();
+                        texData.colorIDTex = null;
+                    }
+                }
+            }
+        };
+    }
+    updateNode(node, delta) {
+        this.updateTexture(node);
+    }
+    updateTexture(node) {
+        if (node.mesh.mesh != null && node.texture.needUpdate) {
+            let subMeshCount = node.mesh.mesh.subMeshes.length;
+            for (let index = 0; index < subMeshCount; index++) {
+                let subMesh = node.mesh.mesh.subMeshes[index];
+                if (subMesh == null || subMesh.getMesh() == null)
+                    continue;
+                let mesh = subMesh.getMesh();
+                let texData = node.texture.GetTextureData(mesh.name);
+                this.updateMaterial(mesh, texData);
+            }
+        }
+    }
+    updateMaterial(mesh, texData) {
+        if (mesh == null || texData == null || !texData.needUpdate)
+            return;
+        texData.needUpdate = false;
+        let pbrMaterial = mesh.material;
+        let scene = SceneManager_1.SceneManager.GetInstance().GetScene();
+        if (pbrMaterial == null)
+            pbrMaterial = new babylonjs_1.PBRMetallicRoughnessMaterial("pbr", scene);
+        if (pbrMaterial.baseTexture != null)
+            pbrMaterial.baseTexture.dispose();
+        if (texData.baseTexPath != null && texData.baseTexPath != "")
+            pbrMaterial.baseTexture = new babylonjs_1.Texture(texData.baseTexPath, scene);
+        if (pbrMaterial.normalTexture != null)
+            pbrMaterial.normalTexture.dispose();
+        if (texData.normalTexPath != null && texData.normalTexPath != "")
+            pbrMaterial.normalTexture = new babylonjs_1.Texture(texData.normalTexPath, scene);
+        if (pbrMaterial.metallicRoughnessTexture != null)
+            pbrMaterial.metallicRoughnessTexture.dispose();
+        if (texData.metroughTexPath != null && texData.metroughTexPath != "")
+            pbrMaterial.metallicRoughnessTexture = new babylonjs_1.Texture(texData.metroughTexPath, scene);
+        if (pbrMaterial.environmentTexture != null)
+            pbrMaterial.environmentTexture.dispose();
+        if (texData.colorIDTex != null)
+            texData.colorIDTex.dispose();
+        texData.colorIDTex = new babylonjs_1.Texture(texData.colorIDTexPath, scene);
+        mesh.material = pbrMaterial;
+    }
+}
+exports.TextureRenderSystem = TextureRenderSystem;
+
+
+/***/ }),
+
+/***/ "./src/ECS/VO/TextureData.ts":
+/*!***********************************!*\
+  !*** ./src/ECS/VO/TextureData.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class TextureData {
+    constructor() {
+        this.needUpdate = false;
+    }
+    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _colorTexPath, _colorIDTex = null) {
+        this.subMeshName = _subMeshName;
+        this.baseTexPath = _baseTex;
+        this.normalTexPath = _normalTex;
+        this.metroughTexPath = _metroughTex;
+        this.environmentTexPath = _environmentTex;
+        this.colorIDTexPath = _colorTexPath;
+        this.colorIDTex = _colorIDTex;
+        this.needUpdate = true;
+    }
+}
+exports.TextureData = TextureData;
 
 
 /***/ }),
@@ -27022,7 +27175,7 @@ const ash_1 = __webpack_require__(/*! ./ash */ "./src/ash/index.ts");
 let ecs = new ash_1.Engine();
 SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize(ecs);
-EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "male_sd_0001_head_basecolor.bmp", "male_sd_0001_head_ddna.bmp", "male_sd_0001_head_metrough.bmp", "environment.dds");
+EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds");
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     ecs.update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
     SceneManager_1.SceneManager.GetInstance().Update();
@@ -27046,6 +27199,8 @@ const MeshRenderSystem_1 = __webpack_require__(/*! ../ECS/System/MeshRenderSyste
 const MeshComponent_1 = __webpack_require__(/*! ../ECS/Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
 const ComponentPool_1 = __webpack_require__(/*! ../ash/tools/ComponentPool */ "./src/ash/tools/ComponentPool.ts");
 const PostionComponent_1 = __webpack_require__(/*! ../ECS/Component/PostionComponent */ "./src/ECS/Component/PostionComponent.ts");
+const TextureComponent_1 = __webpack_require__(/*! ../ECS/Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
+const TextureRenderSystem_1 = __webpack_require__(/*! ../ECS/System/TextureRenderSystem */ "./src/ECS/System/TextureRenderSystem.ts");
 class EntityManager {
     constructor() {
     }
@@ -27055,13 +27210,17 @@ class EntityManager {
     Initialize(engine) {
         this.ecsEngine = engine;
         this.ecsEngine.addSystem(new MeshRenderSystem_1.MeshRenderSystem, 0);
+        this.ecsEngine.addSystem(new TextureRenderSystem_1.TextureRenderSystem, 0);
     }
-    CreateMeshEntity(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, posX = 0.0, posY = 0.0, posZ = 0.0) {
-        var entity = new ash_1.Entity();
-        var mesh = ComponentPool_1.ComponentPool.get(MeshComponent_1.MeshComponent);
-        mesh.Initialize(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, null);
+    CreateMeshEntity(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, colorIDTex = null, posX = 0.0, posY = 0.0, posZ = 0.0) {
+        let entity = new ash_1.Entity();
+        let mesh = ComponentPool_1.ComponentPool.get(MeshComponent_1.MeshComponent);
+        mesh.Initialize(resPath, meshName);
         entity.add(mesh);
-        var pos = ComponentPool_1.ComponentPool.get(PostionComponent_1.PostionComponent);
+        let tex = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
+        tex.SetTextureInfo("QS_shendao_male_001_toushi", baseTex, normalTex, metroughTex, environmentTex, colorIDTex);
+        entity.add(tex);
+        let pos = ComponentPool_1.ComponentPool.get(PostionComponent_1.PostionComponent);
         pos.Initialize(posX, posY, posZ);
         entity.add(pos);
         this.ecsEngine.addEntity(entity);
@@ -27093,26 +27252,31 @@ class SceneManager {
         return SceneManager.instance;
     }
     Initialize() {
-        var canvas = document.getElementById("renderCanvas");
-        this.m_engine = new babylonjs_1.Engine(canvas, true);
+        this.m_canvas = document.getElementById("renderCanvas");
+        this.m_engine = new babylonjs_1.Engine(this.m_canvas, true);
         this.m_scene = new babylonjs_1.Scene(this.m_engine);
         let camTarget = BABYLON.Vector3.Zero().clone();
         camTarget.y = 5;
         this.m_camera = new babylonjs_1.ArcRotateCamera("Camera", 0, Math.PI / 10, 10, camTarget, this.m_scene);
-        this.m_camera.attachControl(canvas, true);
+        this.m_camera.attachControl(this.m_canvas, true);
         this.m_camera.setTarget(new babylonjs_1.Vector3(0, 40, 0));
         this.m_camera.wheelDeltaPercentage /= 5;
         var light1 = new babylonjs_1.DirectionalLight("light1", new babylonjs_1.Vector3(1, -1, 0), this.m_scene);
         var light2 = new babylonjs_1.DirectionalLight("light2", new babylonjs_1.Vector3(1, 0, 0), this.m_scene);
         var light2 = new babylonjs_1.DirectionalLight("light3", new babylonjs_1.Vector3(1, 0, 1), this.m_scene);
         light1.diffuse = new BABYLON.Color3(10, 10, 10);
-        this.m_scene.debugLayer.show();
     }
     GetScene() {
         return this.m_scene;
     }
     GetEngine() {
         return this.m_engine;
+    }
+    GetCamera() {
+        return this.m_camera;
+    }
+    GetHTMLCanvasElement() {
+        return this.m_canvas;
     }
     Update() {
         if (this.m_scene != null)

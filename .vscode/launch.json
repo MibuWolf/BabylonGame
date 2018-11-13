@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Game",
             "url": "http://172.16.1.110/index.html",
-            "webRoot": "http://172.16.1.110",
+            "webRoot": "${workspaceRoot}",
             "sourceMaps": true,
             "preLaunchTask": "build-game",
             "userDataDir": "${workspaceRoot}/.tempChromeProfileForDebug"
