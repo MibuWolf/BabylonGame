@@ -1,0 +1,4 @@
+
+# Make an exception to ignore specific directories
+# Most of these directories are brought in by executing git_bootstrap.
+/.tempChromeProfileForDebug

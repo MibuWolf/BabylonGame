@@ -15,7 +15,9 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "page-communication": "^1.6.0"
+  },
   "scripts": {
     "build": "webpack"
   },

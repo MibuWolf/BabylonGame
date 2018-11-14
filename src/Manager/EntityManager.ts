@@ -5,6 +5,7 @@ import { ComponentPool } from '../ash/tools/ComponentPool';
 import { PostionComponent } from '../ECS/Component/PostionComponent';
 import { TextureComponent } from '../ECS/Component/TextureComponent';
 import { TextureRenderSystem } from '../ECS/System/TextureRenderSystem';
+
 export class EntityManager
 {
     private static instance: EntityManager = new EntityManager();
@@ -21,12 +22,17 @@ export class EntityManager
     }
 
 
-    public Initialize( engine: Engine ): void
+    public Initialize(): void
     {
-        this.ecsEngine = engine;
+        this.ecsEngine = new Engine();
 
         this.ecsEngine.addSystem( new MeshRenderSystem, 0 );
         this.ecsEngine.addSystem( new TextureRenderSystem, 0 );
+    }
+
+    public GetECSEngine(): Engine
+    {
+        return this.ecsEngine;
     }
 
     /**

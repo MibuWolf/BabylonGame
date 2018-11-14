@@ -27171,13 +27171,11 @@ exports.TextureData = TextureData;
 Object.defineProperty(exports, "__esModule", { value: true });
 const SceneManager_1 = __webpack_require__(/*! ./Manager/SceneManager */ "./src/Manager/SceneManager.ts");
 const EntityManager_1 = __webpack_require__(/*! ./Manager/EntityManager */ "./src/Manager/EntityManager.ts");
-const ash_1 = __webpack_require__(/*! ./ash */ "./src/ash/index.ts");
-let ecs = new ash_1.Engine();
 SceneManager_1.SceneManager.GetInstance().Initialize();
-EntityManager_1.EntityManager.GetInstance().Initialize(ecs);
+EntityManager_1.EntityManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds");
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
-    ecs.update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
+    EntityManager_1.EntityManager.GetInstance().GetECSEngine().update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
     SceneManager_1.SceneManager.GetInstance().Update();
 });
 
@@ -27208,9 +27206,12 @@ class EntityManager {
         return EntityManager.instance;
     }
     Initialize(engine) {
-        this.ecsEngine = engine;
+        this.ecsEngine = new ash_1.Engine();
         this.ecsEngine.addSystem(new MeshRenderSystem_1.MeshRenderSystem, 0);
         this.ecsEngine.addSystem(new TextureRenderSystem_1.TextureRenderSystem, 0);
+    }
+    GetECSEngine() {
+        return this.ecsEngine;
     }
     CreateMeshEntity(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, colorIDTex = null, posX = 0.0, posY = 0.0, posZ = 0.0) {
         let entity = new ash_1.Entity();
