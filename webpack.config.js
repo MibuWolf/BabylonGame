@@ -1,10 +1,11 @@
 const path = require("path");
-	
+
 module.exports = {
     entry: './src/Game.ts',
     output: {
         filename: 'Game.js',
-        path: path.resolve(__dirname, 'dist')
+        //path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'bin/dist')
     },
     resolve: {
         extensions: [".ts"]

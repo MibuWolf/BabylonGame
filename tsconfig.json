@@ -15,7 +15,8 @@
             "es6"
         ],
         "declaration": true,
-        "outDir": "./dist"
+        //"outDir": "./dist"
+        "outDir": "./bin/dist"
     },
     "files": [
         "./src/Game.ts"

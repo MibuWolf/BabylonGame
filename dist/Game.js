@@ -27171,8 +27171,10 @@ exports.TextureData = TextureData;
 Object.defineProperty(exports, "__esModule", { value: true });
 const SceneManager_1 = __webpack_require__(/*! ./Manager/SceneManager */ "./src/Manager/SceneManager.ts");
 const EntityManager_1 = __webpack_require__(/*! ./Manager/EntityManager */ "./src/Manager/EntityManager.ts");
+const WebNetManager_1 = __webpack_require__(/*! ./Manager/WebNetManager */ "./src/Manager/WebNetManager.ts");
 SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize();
+WebNetManager_1.WebNetManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds");
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     EntityManager_1.EntityManager.GetInstance().GetECSEngine().update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
@@ -27205,7 +27207,7 @@ class EntityManager {
     static GetInstance() {
         return EntityManager.instance;
     }
-    Initialize(engine) {
+    Initialize() {
         this.ecsEngine = new ash_1.Engine();
         this.ecsEngine.addSystem(new MeshRenderSystem_1.MeshRenderSystem, 0);
         this.ecsEngine.addSystem(new TextureRenderSystem_1.TextureRenderSystem, 0);
@@ -27286,6 +27288,44 @@ class SceneManager {
 }
 SceneManager.instance = new SceneManager();
 exports.SceneManager = SceneManager;
+;
+
+
+/***/ }),
+
+/***/ "./src/Manager/WebNetManager.ts":
+/*!**************************************!*\
+  !*** ./src/Manager/WebNetManager.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const TextureData_1 = __webpack_require__(/*! ../ECS/VO/TextureData */ "./src/ECS/VO/TextureData.ts");
+class WebNetManager {
+    constructor() {
+    }
+    static GetInstance() {
+        return WebNetManager.instance;
+    }
+    Initialize() {
+        console.log("WenNetManager Init");
+        window.addEventListener('message', function (e) {
+            console.log("OnMessage");
+            if (e.source != window.parent)
+                return;
+            console.log(e.type);
+            let color = new TextureData_1.TextureData();
+            color.baseTexPath = "123";
+            color.normalTexPath = "456";
+            window.parent.postMessage(color, '*');
+        }, false);
+    }
+}
+WebNetManager.instance = new WebNetManager();
+exports.WebNetManager = WebNetManager;
 ;
 
 
