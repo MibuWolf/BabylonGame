@@ -1,13 +1,11 @@
-import { AbstractMesh, Texture } from 'babylonjs';
-import { TextureData } from '../VO/TextureData';
+import { Texture } from 'babylonjs';
+import { TextureData } from '../../VO/TextureData';
 export class TextureComponent
 {
     public texs: Map<string, TextureData>;
-    public needUpdate: boolean;
     public constructor()
     {
         this.texs = new Map<string, TextureData>();
-        this.needUpdate = false;
     }
 
     /**
@@ -20,8 +18,6 @@ export class TextureComponent
         texData.Initialize( _subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath, _colorIDTexPath, _colorIDTex )
 
         this.texs.set( _subMeshName, texData );
-
-        this.needUpdate = true;
     }
 
 

@@ -1,9 +1,14 @@
 import { AbstractMesh } from "babylonjs";
+import { MeshData } from '../../VO/MeshData';
 export declare class MeshComponent {
-    resPath: string;
-    meshName: string;
+    meshData: MeshData;
     mesh: AbstractMesh;
-    subMeshs: Array<string>;
     constructor();
-    Initialize(_resPath?: string, _meshName?: string, _mesh?: AbstractMesh): void;
+    Initialize(path?: string, x?: number, y?: number, z?: number, meshModel?: AbstractMesh): void;
+    IsValid(): boolean;
+    GetMeshPath(): string;
+    GetMeshName(): string;
+    GetPositionX(): number;
+    GetPositionY(): number;
+    GetPositionZ(): number;
 }

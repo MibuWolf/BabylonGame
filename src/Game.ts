@@ -1,14 +1,14 @@
 import { SceneManager } from './Manager/SceneManager';
 import { EntityManager } from './Manager/EntityManager';
-import { Engine } from './ash';
 import { WebNetManager } from './Manager/WebNetManager';
+import { LogicWebSerivce } from './Manager/LogicWebSerivce';
 
 SceneManager.GetInstance().Initialize();
 EntityManager.GetInstance().Initialize();
 WebNetManager.GetInstance().Initialize();
+LogicWebSerivce.GetInstance().Initialize();
 
-EntityManager.GetInstance().CreateMeshEntity( "http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp",
-    "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds" )
+EntityManager.GetInstance().CreateMeshEntity( "test", "http://172.16.1.110/dist/Asset/head.obj", 0.0, 0.0, 0.0 );
 // EntityManager.GetInstance().CreateMeshEntity( "http://172.16.1.110/dist/Asset/", "DamagedHelmet.obj", "Default_albedo.jpg", "Default_normal.jpg",
 //     "Default_metalRoughness.jpg", "environment.dds" )
 

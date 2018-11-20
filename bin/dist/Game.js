@@ -26827,40 +26827,50 @@ module.exports = g;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const MeshData_1 = __webpack_require__(/*! ../../VO/MeshData */ "./src/VO/MeshData.ts");
 class MeshComponent {
     constructor() {
+        this.mesh = null;
+        this.meshData = null;
     }
-    Initialize(_resPath = "", _meshName = "", _mesh = null) {
-        this.resPath = _resPath;
-        this.meshName = _meshName;
-        this.mesh = _mesh;
+    Initialize(path = "", x = 0.0, y = 0.0, z = 0.0, meshModel = null) {
+        this.meshData = null;
+        this.meshData = new MeshData_1.MeshData();
+        this.meshData.Initialize(path, x, y, z);
+        this.mesh = meshModel;
+    }
+    IsValid() {
+        return !(this.meshData == null);
+    }
+    GetMeshPath() {
+        if (!this.IsValid())
+            return null;
+        let pos = this.meshData.meshPath.lastIndexOf('/');
+        return this.meshData.meshPath.substring(0, pos);
+    }
+    GetMeshName() {
+        if (!this.IsValid())
+            return null;
+        let pos = this.meshData.meshPath.lastIndexOf('/');
+        return this.meshData.meshPath.substring(pos);
+    }
+    GetPositionX() {
+        if (!this.IsValid())
+            return 0.0;
+        return this.meshData.posX;
+    }
+    GetPositionY() {
+        if (!this.IsValid())
+            return 0.0;
+        return this.meshData.posY;
+    }
+    GetPositionZ() {
+        if (!this.IsValid())
+            return 0.0;
+        return this.meshData.posZ;
     }
 }
 exports.MeshComponent = MeshComponent;
-
-
-/***/ }),
-
-/***/ "./src/ECS/Component/PostionComponent.ts":
-/*!***********************************************!*\
-  !*** ./src/ECS/Component/PostionComponent.ts ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class PostionComponent {
-    constructor() {
-    }
-    Initialize(x = 0.0, y = 0.0, z = 0.0) {
-        this.posX = x;
-        this.posY = y;
-        this.posZ = z;
-    }
-}
-exports.PostionComponent = PostionComponent;
 
 
 /***/ }),
@@ -26875,17 +26885,15 @@ exports.PostionComponent = PostionComponent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const TextureData_1 = __webpack_require__(/*! ../VO/TextureData */ "./src/ECS/VO/TextureData.ts");
+const TextureData_1 = __webpack_require__(/*! ../../VO/TextureData */ "./src/VO/TextureData.ts");
 class TextureComponent {
     constructor() {
         this.texs = new Map();
-        this.needUpdate = false;
     }
     SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _environmentTexPath = "", _colorIDTexPath = "", _colorIDTex = null) {
         let texData = new TextureData_1.TextureData();
         texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath, _colorIDTexPath, _colorIDTex);
         this.texs.set(_subMeshName, texData);
-        this.needUpdate = true;
     }
     GetTextureData(_subMeshName) {
         if (!this.texs.has(_subMeshName))
@@ -26895,6 +26903,31 @@ class TextureComponent {
     }
 }
 exports.TextureComponent = TextureComponent;
+
+
+/***/ }),
+
+/***/ "./src/ECS/Component/UUIDComponent.ts":
+/*!********************************************!*\
+  !*** ./src/ECS/Component/UUIDComponent.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class UUIDComponent {
+    constructor() {
+    }
+    Initialize(id) {
+        this.uUid = id;
+    }
+    Equal(id) {
+        return (this.uUid == id);
+    }
+}
+exports.UUIDComponent = UUIDComponent;
 
 
 /***/ }),
@@ -26916,13 +26949,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ash_1 = __webpack_require__(/*! ../../ash */ "./src/ash/index.ts");
-const PostionComponent_1 = __webpack_require__(/*! ../Component/PostionComponent */ "./src/ECS/Component/PostionComponent.ts");
 const MeshComponent_1 = __webpack_require__(/*! ../Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
+const UUIDComponent_1 = __webpack_require__(/*! ../Component/UUIDComponent */ "./src/ECS/Component/UUIDComponent.ts");
 class MeshRenderNode extends ash_1.Node {
 }
 __decorate([
-    ash_1.keep(PostionComponent_1.PostionComponent)
-], MeshRenderNode.prototype, "pos", void 0);
+    ash_1.keep(UUIDComponent_1.UUIDComponent)
+], MeshRenderNode.prototype, "uuid", void 0);
 __decorate([
     ash_1.keep(MeshComponent_1.MeshComponent)
 ], MeshRenderNode.prototype, "mesh", void 0);
@@ -26950,8 +26983,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ash_1 = __webpack_require__(/*! ../../ash */ "./src/ash/index.ts");
 const MeshComponent_1 = __webpack_require__(/*! ../Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
 const TextureComponent_1 = __webpack_require__(/*! ../Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
+const UUIDComponent_1 = __webpack_require__(/*! ../Component/UUIDComponent */ "./src/ECS/Component/UUIDComponent.ts");
 class TextureNode extends ash_1.Node {
 }
+__decorate([
+    ash_1.keep(UUIDComponent_1.UUIDComponent)
+], TextureNode.prototype, "uuid", void 0);
 __decorate([
     ash_1.keep(MeshComponent_1.MeshComponent)
 ], TextureNode.prototype, "mesh", void 0);
@@ -26983,24 +27020,16 @@ class MeshRenderSystem extends ash_1.ListIteratingSystem {
         super(MeshRenderNode_1.MeshRenderNode);
         this.nodeAdded = (node) => {
             var scene = SceneManager_1.SceneManager.GetInstance().GetScene();
-            if (scene == null) {
-                console.log("SceneManaer is Not init!");
+            if (scene == null || !node.mesh.IsValid()) {
+                console.log("Data is Not init!");
                 return;
             }
-            babylonjs_1.SceneLoader.ImportMesh("", node.mesh.resPath, node.mesh.meshName, scene, function (newMeshes) {
+            babylonjs_1.SceneLoader.ImportMesh("", node.mesh.GetMeshPath(), node.mesh.GetMeshName(), scene, function (newMeshes) {
                 var meshModel = newMeshes[0];
                 if (meshModel != null) {
-                    if (node.mesh.subMeshs = null) {
-                        node.mesh.subMeshs.length = 0;
-                        node.mesh.subMeshs = null;
-                    }
-                    node.mesh.subMeshs = new Array(meshModel.subMeshes.length);
-                    for (let index = 0; index < meshModel.subMeshes.length; index++) {
-                        node.mesh.subMeshs[index] = meshModel.subMeshes[index].getMesh().name;
-                    }
-                    meshModel.position.x = node.pos.posX;
-                    meshModel.position.y = node.pos.posY;
-                    meshModel.position.z = node.pos.posZ;
+                    meshModel.position.x = node.mesh.GetPositionX();
+                    meshModel.position.y = node.mesh.GetPositionY();
+                    meshModel.position.z = node.mesh.GetPositionZ();
                     node.mesh.mesh = meshModel;
                 }
                 else {
@@ -27012,7 +27041,6 @@ class MeshRenderSystem extends ash_1.ListIteratingSystem {
             });
         };
         this.nodeRemoved = (node) => {
-            node.mesh.subMeshs.length = 0;
             if (node.mesh.mesh == null)
                 return;
             node.mesh.mesh.dispose(false, true);
@@ -27081,10 +27109,9 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
         };
     }
     updateNode(node, delta) {
-        this.updateTexture(node);
     }
     updateTexture(node) {
-        if (node.mesh.mesh != null && node.texture.needUpdate) {
+        if (node.mesh.mesh != null) {
             let subMeshCount = node.mesh.mesh.subMeshes.length;
             for (let index = 0; index < subMeshCount; index++) {
                 let subMesh = node.mesh.mesh.subMeshes[index];
@@ -27097,9 +27124,8 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
         }
     }
     updateMaterial(mesh, texData) {
-        if (mesh == null || texData == null || !texData.needUpdate)
+        if (mesh == null || texData == null)
             return;
-        texData.needUpdate = false;
         let pbrMaterial = mesh.material;
         let scene = SceneManager_1.SceneManager.GetInstance().GetScene();
         if (pbrMaterial == null)
@@ -27129,65 +27155,6 @@ exports.TextureRenderSystem = TextureRenderSystem;
 
 /***/ }),
 
-/***/ "./src/ECS/VO/TestVO.ts":
-/*!******************************!*\
-  !*** ./src/ECS/VO/TestVO.ts ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class TestVO {
-    constructor() {
-        this.needUpdate = false;
-    }
-    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _colorTexPath, _colorIDTex = null) {
-        this.subMeshName = _subMeshName;
-        this.baseTexPath = _baseTex;
-        this.normalTexPath = _normalTex;
-        this.metroughTexPath = _metroughTex;
-        this.environmentTexPath = _environmentTex;
-        this.colorIDTexPath = _colorTexPath;
-        this.needUpdate = true;
-    }
-}
-exports.TestVO = TestVO;
-
-
-/***/ }),
-
-/***/ "./src/ECS/VO/TextureData.ts":
-/*!***********************************!*\
-  !*** ./src/ECS/VO/TextureData.ts ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class TextureData {
-    constructor() {
-        this.needUpdate = false;
-    }
-    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _colorTexPath, _colorIDTex = null) {
-        this.subMeshName = _subMeshName;
-        this.baseTexPath = _baseTex;
-        this.normalTexPath = _normalTex;
-        this.metroughTexPath = _metroughTex;
-        this.environmentTexPath = _environmentTex;
-        this.colorIDTexPath = _colorTexPath;
-        this.colorIDTex = _colorIDTex;
-        this.needUpdate = true;
-    }
-}
-exports.TextureData = TextureData;
-
-
-/***/ }),
-
 /***/ "./src/Game.ts":
 /*!*********************!*\
   !*** ./src/Game.ts ***!
@@ -27201,9 +27168,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SceneManager_1 = __webpack_require__(/*! ./Manager/SceneManager */ "./src/Manager/SceneManager.ts");
 const EntityManager_1 = __webpack_require__(/*! ./Manager/EntityManager */ "./src/Manager/EntityManager.ts");
 const WebNetManager_1 = __webpack_require__(/*! ./Manager/WebNetManager */ "./src/Manager/WebNetManager.ts");
+const LogicWebSerivce_1 = __webpack_require__(/*! ./Manager/LogicWebSerivce */ "./src/Manager/LogicWebSerivce.ts");
 SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize();
 WebNetManager_1.WebNetManager.GetInstance().Initialize();
+LogicWebSerivce_1.LogicWebSerivce.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds");
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     EntityManager_1.EntityManager.GetInstance().GetECSEngine().update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
@@ -27227,7 +27196,6 @@ const ash_1 = __webpack_require__(/*! ../ash */ "./src/ash/index.ts");
 const MeshRenderSystem_1 = __webpack_require__(/*! ../ECS/System/MeshRenderSystem */ "./src/ECS/System/MeshRenderSystem.ts");
 const MeshComponent_1 = __webpack_require__(/*! ../ECS/Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
 const ComponentPool_1 = __webpack_require__(/*! ../ash/tools/ComponentPool */ "./src/ash/tools/ComponentPool.ts");
-const PostionComponent_1 = __webpack_require__(/*! ../ECS/Component/PostionComponent */ "./src/ECS/Component/PostionComponent.ts");
 const TextureComponent_1 = __webpack_require__(/*! ../ECS/Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
 const TextureRenderSystem_1 = __webpack_require__(/*! ../ECS/System/TextureRenderSystem */ "./src/ECS/System/TextureRenderSystem.ts");
 class EntityManager {
@@ -27247,20 +27215,54 @@ class EntityManager {
     CreateMeshEntity(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, colorIDTex = null, posX = 0.0, posY = 0.0, posZ = 0.0) {
         let entity = new ash_1.Entity();
         let mesh = ComponentPool_1.ComponentPool.get(MeshComponent_1.MeshComponent);
-        mesh.Initialize(resPath, meshName);
+        mesh.Initialize(resPath, posX, posY, posZ);
         entity.add(mesh);
         let tex = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
         tex.SetTextureInfo("QS_shendao_male_001_toushi", baseTex, normalTex, metroughTex, environmentTex, colorIDTex);
         entity.add(tex);
-        let pos = ComponentPool_1.ComponentPool.get(PostionComponent_1.PostionComponent);
-        pos.Initialize(posX, posY, posZ);
-        entity.add(pos);
         this.ecsEngine.addEntity(entity);
     }
 }
 EntityManager.instance = new EntityManager();
 exports.EntityManager = EntityManager;
 ;
+
+
+/***/ }),
+
+/***/ "./src/Manager/LogicWebSerivce.ts":
+/*!****************************************!*\
+  !*** ./src/Manager/LogicWebSerivce.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const Signal2_1 = __webpack_require__(/*! ../ash/signals/Signal2 */ "./src/ash/signals/Signal2.ts");
+const WebNetManager_1 = __webpack_require__(/*! ./WebNetManager */ "./src/Manager/WebNetManager.ts");
+const WebNetMessage_1 = __webpack_require__(/*! ../WebNetMessage/WebNetMessage */ "./src/WebNetMessage/WebNetMessage.ts");
+class LogicWebSerivce {
+    constructor() {
+        this.onShowMeshList = (message) => {
+            if (message == null)
+                return;
+            let meshList = new WebNetMessage_1.MeshList();
+            meshList.fromObj(message);
+        };
+    }
+    static GetInstance() {
+        return LogicWebSerivce.instance;
+    }
+    Initialize() {
+        this.meshSignal = new Signal2_1.Signal2();
+        this.materialSignal = new Signal2_1.Signal2();
+        WebNetManager_1.WebNetManager.GetInstance().RegisterMessage(WebNetMessage_1.WebMessageID.SHOW_MESHES, this.onShowMeshList);
+    }
+}
+LogicWebSerivce.instance = new LogicWebSerivce();
+exports.LogicWebSerivce = LogicWebSerivce;
 
 
 /***/ }),
@@ -27332,7 +27334,7 @@ exports.SceneManager = SceneManager;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const TestVO_1 = __webpack_require__(/*! ../ECS/VO/TestVO */ "./src/ECS/VO/TestVO.ts");
+const Signal1_1 = __webpack_require__(/*! ../ash/signals/Signal1 */ "./src/ash/signals/Signal1.ts");
 class WebNetManager {
     constructor() {
     }
@@ -27340,23 +27342,168 @@ class WebNetManager {
         return WebNetManager.instance;
     }
     Initialize() {
+        this.allSignals = new Map();
         console.log("WenNetManager Init");
         window.addEventListener('message', function (e) {
             console.log("OnMessage");
             if (e.source != window.parent)
                 return;
-            console.log(e.type);
-            let color = new TestVO_1.TestVO();
-            color.baseTexPath = "123";
-            color.normalTexPath = "456";
-            console.log("babylon send message to main window");
-            window.parent.postMessage(color, '*');
+            WebNetManager.GetInstance().OnWebNetMessage(e.data);
         }, false);
+    }
+    RegisterMessage(messageID, listener) {
+        if (!this.allSignals.has(messageID)) {
+            let signal = new Signal1_1.Signal1();
+            this.allSignals.set(messageID, signal);
+            signal.add(listener);
+        }
+    }
+    UnRegisterMessage(messageID, listener) {
+        if (!this.allSignals.has(messageID))
+            return;
+        let signal = this.allSignals.get(messageID);
+        signal.remove(listener);
+    }
+    SendWebNetMessage(message) {
+        if (window.parent != null && message != null)
+            window.parent.postMessage(message, "*");
+    }
+    OnWebNetMessage(message) {
+        if (message == null)
+            return;
+        let messageID = message.messageID;
+        if (this.allSignals.has(messageID)) {
+            let signal = this.allSignals.get(messageID);
+            if (signal != null)
+                signal.dispatch(message);
+        }
     }
 }
 WebNetManager.instance = new WebNetManager();
 exports.WebNetManager = WebNetManager;
 ;
+
+
+/***/ }),
+
+/***/ "./src/VO/MeshData.ts":
+/*!****************************!*\
+  !*** ./src/VO/MeshData.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class MeshData {
+    constructor() {
+        this.meshPath = "";
+        this.posX = 0.0;
+        this.posY = 0.0;
+        this.posZ = 0.0;
+    }
+    Initialize(path = "", x = 0.0, y = 0.0, z = 0.0) {
+        this.meshPath = path;
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
+    }
+}
+exports.MeshData = MeshData;
+
+
+/***/ }),
+
+/***/ "./src/VO/TextureData.ts":
+/*!*******************************!*\
+  !*** ./src/VO/TextureData.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class TextureData {
+    constructor() {
+    }
+    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _colorTexPath, _colorIDTex = null) {
+        this.subMeshName = _subMeshName;
+        this.baseTexPath = _baseTex;
+        this.normalTexPath = _normalTex;
+        this.metroughTexPath = _metroughTex;
+        this.environmentTexPath = _environmentTex;
+        this.colorIDTexPath = _colorTexPath;
+        this.colorIDTex = _colorIDTex;
+    }
+}
+exports.TextureData = TextureData;
+
+
+/***/ }),
+
+/***/ "./src/WebNetMessage/WebNetMessage.ts":
+/*!********************************************!*\
+  !*** ./src/WebNetMessage/WebNetMessage.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var WebMessageID;
+(function (WebMessageID) {
+    WebMessageID[WebMessageID["UNDEFINE"] = 0] = "UNDEFINE";
+    WebMessageID[WebMessageID["SHOW_MESHES"] = 1] = "SHOW_MESHES";
+})(WebMessageID = exports.WebMessageID || (exports.WebMessageID = {}));
+class MessageInfo {
+}
+exports.MessageInfo = MessageInfo;
+class MeshInfo extends MessageInfo {
+    constructor(id = "", name = "", x = 0.0, y = 0.0, z = 0.0) {
+        super();
+        this.uUid = id;
+        this.meshName = name;
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
+    }
+    fromObj(obj) {
+        this.uUid = obj.uUid;
+        this.meshName = obj.meshName;
+        this.posX = obj.posX;
+        this.posY = obj.posY;
+        this.posZ = obj.posZ;
+    }
+}
+exports.MeshInfo = MeshInfo;
+class MeshList extends MessageInfo {
+    constructor() {
+        super();
+        this.messageID = WebMessageID.SHOW_MESHES;
+        this.meshList = new Array();
+    }
+    AddMeshInfo(mesh) {
+        if (mesh == null)
+            return;
+        this.meshList.push(mesh);
+    }
+    fromObj(obj) {
+        this.meshList.length = 0;
+        let array = obj.meshList;
+        if (array == null)
+            return;
+        for (let i = 0; i <= array.length; i++) {
+            let data = array[i];
+            let meshInfo = new MeshInfo();
+            meshInfo.fromObj(data);
+            this.meshList.push(meshInfo);
+        }
+    }
+}
+exports.MeshList = MeshList;
 
 
 /***/ }),

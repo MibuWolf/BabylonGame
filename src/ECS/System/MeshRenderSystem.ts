@@ -14,34 +14,21 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
     {
         var scene = SceneManager.GetInstance().GetScene();
 
-        if ( scene == null )
+        if ( scene == null || !node.mesh.IsValid() )
         {
-            console.log( "SceneManaer is Not init!" );
+            console.log( "Data is Not init!" );
             return;
         }
 
-        SceneLoader.ImportMesh( "", node.mesh.resPath, node.mesh.meshName, scene, function ( newMeshes )
+        SceneLoader.ImportMesh( "", node.mesh.GetMeshPath(), node.mesh.GetMeshName(), scene, function ( newMeshes )
         {
             var meshModel = newMeshes[ 0 ];
 
             if ( meshModel != null )
             {
-                if ( node.mesh.subMeshs = null )
-                {
-                    node.mesh.subMeshs.length = 0;
-                    node.mesh.subMeshs = null;
-                }
-
-                node.mesh.subMeshs = new Array<string>( meshModel.subMeshes.length );
-
-                for ( let index = 0; index < meshModel.subMeshes.length; index++ )
-                {
-                    node.mesh.subMeshs[ index ] = meshModel.subMeshes[ index ].getMesh().name;
-                }
-
-                meshModel.position.x = node.pos.posX
-                meshModel.position.y = node.pos.posY;
-                meshModel.position.z = node.pos.posZ;
+                meshModel.position.x = node.mesh.GetPositionX()
+                meshModel.position.y = node.mesh.GetPositionY();
+                meshModel.position.z = node.mesh.GetPositionZ();
                 node.mesh.mesh = meshModel;
 
             }
@@ -63,8 +50,6 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
 
     protected nodeRemoved = ( node: MeshRenderNode ): void =>
     {
-        node.mesh.subMeshs.length = 0;
-
         if ( node.mesh.mesh == null )
             return;
 

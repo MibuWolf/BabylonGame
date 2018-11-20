@@ -1,123 +1,176 @@
 export enum WebMessageID
 {
     UNDEFINE = 0,
-    SELECT_MESH,                // 主页面下发 选中显示模型信息
-    SELECT_SUBMESH,             // 主页面下发 选中显示子模型
-    SELECT_IDTEXTURE,           // 主页面下发 设置ID图
-    SET_MATERIAL,               //  主页面下发  设置子模型材质
-    REQUEST_UPDATEIDTEX,        // 向主页面请求 更新ID贴图
-    REQUEST_GENERATESBSAR,      // 向主页面请求 生成SBSAR
+    SHOW_MESHES,                // 主页面下发 选中显示模型信息
 
+    UPDATE_TEXTURE,           // 主页面下发 更新贴图信息
 }
 
 // SELECT_MESH/SELECT_SUBMESH
 export abstract class MessageInfo
 {
-    public messageID: WebMessageID;
     abstract fromObj( obj: any ): void;
 }
 
 export class MeshInfo extends MessageInfo
 {
+    public uUid: string;
     public meshName: string;
+    public posX: number;
+    public posY: number;
+    public posZ: number;
 
-    public subMeshList: Map<WebMessageID, SubMeshInfo>
-
-    public constructor( message: WebMessageID = WebMessageID.UNDEFINE, name: string = "" )
+    public constructor( id: string = "", name: string = "", x: number = 0.0, y: number = 0.0, z: number = 0.0 )
     {
         super();
-        this.messageID = message;
+        this.uUid = id;
         this.meshName = name;
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
     }
 
 
     public fromObj( obj: any ): void
     {
-        this.messageID = obj.messageID;
+        this.uUid = obj.uUid;
         this.meshName = obj.meshName;
+        this.posX = obj.posX;
+        this.posY = obj.posY;
+        this.posZ = obj.posZ;
     }
 
 
 }
 
-
-export class SubMeshInfo extends MessageInfo
+export class MeshList extends MessageInfo
 {
-    public subMeshName: string;
+    public messageID: WebMessageID;
+    public meshList: Array<MeshInfo>;
 
-    public idTexName: string;
-    public materil: MaterialInfo
-
-    public constructor( message: WebMessageID = WebMessageID.UNDEFINE, name: string = "" )
+    public constructor()
     {
         super();
-        this.messageID = message;
-        this.subMeshName = name;
+        this.messageID = WebMessageID.SHOW_MESHES;
+        this.meshList = new Array<MeshInfo>();
+    }
+
+    public AddMeshInfo( mesh: MeshInfo ): void
+    {
+        if ( mesh == null )
+            return;
+
+        this.meshList.push( mesh );
+    }
+
+    public fromObj( obj: any ): void
+    {
+        this.meshList.length = 0;
+
+        let array: Array<any> = obj.meshList;
+
+        if ( array == null )
+            return;
+
+        for ( let i: number = 0; i <= array.length; i++ )
+        {
+            let data: any = array[ i ];
+            let meshInfo: MeshInfo = new MeshInfo();
+            meshInfo.fromObj( data );
+            this.meshList.push( meshInfo );
+        }
+
+    }
+}
+
+
+export class MaterialID extends MessageInfo
+{
+    public uUid: string;            // 所属模型ID
+    public materialName: string;    // 材质名称
+
+    public constructor( id: string = "", name: string = "" )
+    {
+        super();
+        this.uUid = id;
+        this.materialName = name;
     }
 
 
     public fromObj( obj: any ): void
     {
-        this.messageID = obj.messageID;
-        this.subMeshName = obj.subMeshName;
+        this.uUid = obj.uUid;
+        this.materialName = obj.materialName;
+    }
+}
+export class TextureInfo extends MessageInfo
+{
+    public baseTexPath: string;     // baseTexPath
+    public normalTexPath: string;   // normalTexPath
+    public metroughTexPath: string; // metroughTexPath
+    public environmentTexPath: string;  // environmentTexPath
+
+
+    public constructor( baseTex: string = "", normalTex: string = "", metroughTex: string = "", environmentTex: string = "" )
+    {
+        super();
+        this.baseTexPath = baseTex;
+        this.normalTexPath = normalTex;
+        this.metroughTexPath = metroughTex;
+        this.environmentTexPath = environmentTex;
     }
 
+
+    public fromObj( obj: any ): void
+    {
+        this.baseTexPath = obj.baseTexPath;
+        this.normalTexPath = obj.normalTexPath;
+        this.metroughTexPath = obj.metroughTexPath;
+        this.environmentTexPath = obj.environmentTexPath;
+    }
 
 }
 
 
 export class IDTextureInfo extends MessageInfo
 {
-    public meshName: string;
-    public subMeshName: string;
-    public idTexture: string;
+    public uUid: string;            // ID图资源ID
+    public idTexPath: string;       // ID图资源路径
 
-    public constructor( mesh: string = "", submesh: string = "", idTex: string = "" )
+    public constructor( id: string = "", path: string = "" )
     {
         super();
-        this.messageID = WebMessageID.SELECT_IDTEXTURE;
-        this.meshName = mesh;
-        this.subMeshName = submesh;
-        this.idTexture = idTex;
+        this.uUid = id;
+        this.idTexPath = path;
     }
 
 
     public fromObj( obj: any ): void
     {
-        this.messageID = obj.messageID;
-        this.meshName = obj.meshName;
-        this.subMeshName = obj.subMeshName;
-        this.idTexture = obj.idTexture;
+        this.uUid = obj.uUid;
+        this.materialName = obj.materialName;
     }
 }
 
 
-export class MaterialInfo extends MessageInfo
+export class UpdateTexture extends MessageInfo
 {
-    public meshName: string;
-    public subMeshName: string;
-    public baseTexture: string;
-    public normalTexture: string;
-    public metroughTexture: string;
-    public environmentTexture: string;
-    public idTexture: string;
+    public messageID: WebMessageID;
+    public materialID: MaterialID;
+    public texInfo: TextureInfo;
 
-    public constructor( mesh: string = "", submesh: string = "", baseTex: string = "", normalTex: string = "",
-        metroughTex: string = "", environmentTex: string = "", idTex: string = "" )
+    public constructor( meshID: string = "", matID: string = "", baseTex: string = "", normalTex: string = "", metroughTex: string = "", environmentTex: string = "" )
     {
         super();
-        this.messageID = WebMessageID.SELECT_IDTEXTURE;
-        this.meshName = mesh;
-        this.subMeshName = submesh;
-        this.idTexture = idTex;
+        this.messageID = WebMessageID.UPDATE_TEXTURE;
+        this.materialID = new MaterialID( meshID, matID );
+        this.texInfo = new TextureInfo( baseTex, normalTex, metroughTex, environmentTex );
     }
 
 
     public fromObj( obj: any ): void
     {
-        this.messageID = obj.messageID;
-        this.meshName = obj.meshName;
-        this.subMeshName = obj.subMeshName;
-        this.idTexture = obj.idTexture;
+        this.materialID.fromObj( obj.materialID );
+        this.texInfo.fromObj( obj.texInfo );
     }
 }

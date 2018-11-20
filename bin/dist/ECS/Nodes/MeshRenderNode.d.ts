@@ -1,7 +1,7 @@
 import { Node } from "../../ash";
-import { PostionComponent } from '../Component/PostionComponent';
 import { MeshComponent } from "../Component/MeshComponent";
+import { UUIDComponent } from "../Component/UUIDComponent";
 export declare class MeshRenderNode extends Node<MeshRenderNode> {
-    pos: PostionComponent;
+    uuid: UUIDComponent;
     mesh: MeshComponent;
 }

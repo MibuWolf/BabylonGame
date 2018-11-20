@@ -1,11 +1,3 @@
-import { Engine, Entity } from '../ash';
-import { MeshRenderSystem } from '../ECS/System/MeshRenderSystem';
-import { MeshComponent } from '../ECS/Component/MeshComponent';
-import { ComponentPool } from '../ash/tools/ComponentPool';
-import { PostionComponent } from '../ECS/Component/PostionComponent';
-import { TextureComponent } from '../ECS/Component/TextureComponent';
-import { TextureRenderSystem } from '../ECS/System/TextureRenderSystem';
-import { TextureData } from '../ECS/VO/TextureData';
 import { Signal1 } from '../ash/signals/Signal1';
 import { WebMessageID } from '../WebNetMessage/WebNetMessage';
 

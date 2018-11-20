@@ -1,4 +1,4 @@
-import { AbstractMesh, Texture } from 'babylonjs';
+import { Texture } from 'babylonjs';
 export class TextureData
 {
     public subMeshName: string;
@@ -8,11 +8,10 @@ export class TextureData
     public environmentTexPath: string;
     public colorIDTexPath: string;
     public colorIDTex: Texture;
-    public needUpdate: boolean;
 
     public constructor()
     {
-        this.needUpdate = false;
+
     }
 
     /**
@@ -28,8 +27,6 @@ export class TextureData
         this.environmentTexPath = _environmentTex;
         this.colorIDTexPath = _colorTexPath;
         this.colorIDTex = _colorIDTex;
-
-        this.needUpdate = true;
     }
 
 

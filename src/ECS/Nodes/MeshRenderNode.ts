@@ -1,10 +1,10 @@
 import { Node, keep } from "../../ash";
-import { PostionComponent } from '../Component/PostionComponent';
 import { MeshComponent } from "../Component/MeshComponent";
+import { UUIDComponent } from "../Component/UUIDComponent";
 export class MeshRenderNode extends Node<MeshRenderNode>
 {
-    @keep( PostionComponent )
-    public pos: PostionComponent;
+    @keep( UUIDComponent )
+    public uuid: UUIDComponent;
     @keep( MeshComponent )
     public mesh: MeshComponent;
 }

@@ -3,7 +3,7 @@ import { TextureNode } from '../Nodes/TextureNode';
 import { SceneManager } from '../../Manager/SceneManager';
 import 'babylonjs-loaders';
 import { AbstractMesh, PBRMetallicRoughnessMaterial, Texture, Scene } from 'babylonjs';
-import { TextureData } from '../VO/TextureData';
+import { TextureData } from '../../VO/TextureData';
 
 export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
 {
@@ -68,13 +68,13 @@ export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
     }
     public updateNode( node: TextureNode, delta: number ): void
     {
-        this.updateTexture( node );
+
     }
 
 
     public updateTexture( node: TextureNode ): void
     {
-        if ( node.mesh.mesh != null && node.texture.needUpdate )
+        if ( node.mesh.mesh != null )
         {
             let subMeshCount = node.mesh.mesh.subMeshes.length;
 
@@ -96,10 +96,9 @@ export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
 
     private updateMaterial( mesh: AbstractMesh, texData: TextureData ): void
     {
-        if ( mesh == null || texData == null || !texData.needUpdate )
+        if ( mesh == null || texData == null )
             return;
 
-        texData.needUpdate = false;
         let pbrMaterial: PBRMetallicRoughnessMaterial = <PBRMetallicRoughnessMaterial> mesh.material;
         let scene: Scene = SceneManager.GetInstance().GetScene();
 
