@@ -34,7 +34,8 @@ export class MeshComponent
             return null;
 
         let pos = this.meshData.meshPath.lastIndexOf( '/' );
-        return this.meshData.meshPath.substring( 0, pos );
+        let path: string = this.meshData.meshPath.substring( 0, pos + 1 );
+        return path;
     }
 
     public GetMeshName(): string
@@ -43,7 +44,8 @@ export class MeshComponent
             return null;
 
         let pos = this.meshData.meshPath.lastIndexOf( '/' );
-        return this.meshData.meshPath.substring( pos );
+        let name: string = this.meshData.meshPath.substring( pos + 1 );
+        return name;
     }
 
     public GetPositionX(): number

@@ -5,9 +5,9 @@ export class MeshData
     public posY: number = 0.0;
     public posZ: number = 0.0;
 
-    public constructor()
+    public constructor( path: string = "", x: number = 0.0, y: number = 0.0, z: number = 0.0 )
     {
-
+        this.Initialize( path, x, y, z );
     }
 
     /**

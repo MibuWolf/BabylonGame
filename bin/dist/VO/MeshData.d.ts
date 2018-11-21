@@ -3,6 +3,6 @@ export declare class MeshData {
     posX: number;
     posY: number;
     posZ: number;
-    constructor();
+    constructor(path?: string, x?: number, y?: number, z?: number);
     Initialize(path?: string, x?: number, y?: number, z?: number): void;
 }

@@ -148,7 +148,7 @@ export class IDTextureInfo extends MessageInfo
     public fromObj( obj: any ): void
     {
         this.uUid = obj.uUid;
-        this.materialName = obj.materialName;
+        this.idTexPath = obj.idTexPath;
     }
 }
 

@@ -1,4 +1,4 @@
-import { Engine } from '../ash';
+import { Engine, Entity } from '../ash';
 export declare class EntityManager {
     private static instance;
     private ecsEngine;
@@ -6,5 +6,7 @@ export declare class EntityManager {
     static GetInstance(): EntityManager;
     Initialize(): void;
     GetECSEngine(): Engine;
-    CreateMeshEntity(resPath: string, meshName: string, baseTex: string, normalTex: string, metroughTex: string, environmentTex: string, colorIDTex?: string, posX?: number, posY?: number, posZ?: number): void;
+    CreateMeshEntity(meshID: string, meshPath: string, posX?: number, posY?: number, posZ?: number): void;
+    ClearAllMesh(): void;
+    GetEntityByUUID(uUid: string): Entity;
 }

@@ -26846,13 +26846,15 @@ class MeshComponent {
         if (!this.IsValid())
             return null;
         let pos = this.meshData.meshPath.lastIndexOf('/');
-        return this.meshData.meshPath.substring(0, pos);
+        let path = this.meshData.meshPath.substring(0, pos + 1);
+        return path;
     }
     GetMeshName() {
         if (!this.IsValid())
             return null;
         let pos = this.meshData.meshPath.lastIndexOf('/');
-        return this.meshData.meshPath.substring(pos);
+        let name = this.meshData.meshPath.substring(pos + 1);
+        return name;
     }
     GetPositionX() {
         if (!this.IsValid())
@@ -26888,12 +26890,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const TextureData_1 = __webpack_require__(/*! ../../VO/TextureData */ "./src/VO/TextureData.ts");
 class TextureComponent {
     constructor() {
+        this.needUpdate = false;
         this.texs = new Map();
+        this.needUpdate = false;
     }
-    SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _environmentTexPath = "", _colorIDTexPath = "", _colorIDTex = null) {
+    SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _environmentTexPath = "") {
         let texData = new TextureData_1.TextureData();
-        texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath, _colorIDTexPath, _colorIDTex);
+        texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath);
         this.texs.set(_subMeshName, texData);
+        this.needUpdate = true;
     }
     GetTextureData(_subMeshName) {
         if (!this.texs.has(_subMeshName))
@@ -27099,16 +27104,14 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
                         pbrMaterial.metallicRoughnessTexture.dispose();
                     if (pbrMaterial.environmentTexture != null)
                         pbrMaterial.environmentTexture.dispose();
-                    let texData = node.texture.GetTextureData(mesh.name);
-                    if (texData != null && texData.colorIDTex != null) {
-                        texData.colorIDTex.dispose();
-                        texData.colorIDTex = null;
-                    }
                 }
             }
         };
     }
     updateNode(node, delta) {
+        if (node.texture.needUpdate) {
+            this.updateTexture(node);
+        }
     }
     updateTexture(node) {
         if (node.mesh.mesh != null) {
@@ -27121,6 +27124,7 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
                 let texData = node.texture.GetTextureData(mesh.name);
                 this.updateMaterial(mesh, texData);
             }
+            node.texture.needUpdate = false;
         }
     }
     updateMaterial(mesh, texData) {
@@ -27132,22 +27136,22 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
             pbrMaterial = new babylonjs_1.PBRMetallicRoughnessMaterial("pbr", scene);
         if (pbrMaterial.baseTexture != null)
             pbrMaterial.baseTexture.dispose();
-        if (texData.baseTexPath != null && texData.baseTexPath != "")
+        if (texData.baseTexPath != null && texData.baseTexPath != null && texData.baseTexPath != "")
             pbrMaterial.baseTexture = new babylonjs_1.Texture(texData.baseTexPath, scene);
         if (pbrMaterial.normalTexture != null)
             pbrMaterial.normalTexture.dispose();
-        if (texData.normalTexPath != null && texData.normalTexPath != "")
+        if (texData.normalTexPath != null && texData.normalTexPath != null && texData.normalTexPath != "")
             pbrMaterial.normalTexture = new babylonjs_1.Texture(texData.normalTexPath, scene);
         if (pbrMaterial.metallicRoughnessTexture != null)
             pbrMaterial.metallicRoughnessTexture.dispose();
-        if (texData.metroughTexPath != null && texData.metroughTexPath != "")
+        if (texData.metroughTexPath != null && texData.metroughTexPath != null && texData.metroughTexPath != "")
             pbrMaterial.metallicRoughnessTexture = new babylonjs_1.Texture(texData.metroughTexPath, scene);
         if (pbrMaterial.environmentTexture != null)
             pbrMaterial.environmentTexture.dispose();
-        if (texData.colorIDTex != null)
-            texData.colorIDTex.dispose();
-        texData.colorIDTex = new babylonjs_1.Texture(texData.colorIDTexPath, scene);
+        if (texData.environmentTexPath != null && texData.environmentTexPath != null && texData.environmentTexPath != "")
+            pbrMaterial.environmentTexture = new babylonjs_1.Texture(texData.environmentTexPath, scene);
         mesh.material = pbrMaterial;
+        texData.needUpdate = false;
     }
 }
 exports.TextureRenderSystem = TextureRenderSystem;
@@ -27173,7 +27177,7 @@ SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize();
 WebNetManager_1.WebNetManager.GetInstance().Initialize();
 LogicWebSerivce_1.LogicWebSerivce.GetInstance().Initialize();
-EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("http://172.16.1.110/dist/Asset/", "head.obj", "http://172.16.1.110/dist/Asset/male_sd_0001_head_basecolor.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_ddna.bmp", "http://172.16.1.110/dist/Asset/male_sd_0001_head_metrough.bmp", "http://172.16.1.110/dist/Asset/environment.dds");
+EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("test", "http://172.16.1.110/dist/Asset/head.obj", 0.0, 0.0, 0.0);
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     EntityManager_1.EntityManager.GetInstance().GetECSEngine().update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
     SceneManager_1.SceneManager.GetInstance().Update();
@@ -27196,8 +27200,8 @@ const ash_1 = __webpack_require__(/*! ../ash */ "./src/ash/index.ts");
 const MeshRenderSystem_1 = __webpack_require__(/*! ../ECS/System/MeshRenderSystem */ "./src/ECS/System/MeshRenderSystem.ts");
 const MeshComponent_1 = __webpack_require__(/*! ../ECS/Component/MeshComponent */ "./src/ECS/Component/MeshComponent.ts");
 const ComponentPool_1 = __webpack_require__(/*! ../ash/tools/ComponentPool */ "./src/ash/tools/ComponentPool.ts");
-const TextureComponent_1 = __webpack_require__(/*! ../ECS/Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
 const TextureRenderSystem_1 = __webpack_require__(/*! ../ECS/System/TextureRenderSystem */ "./src/ECS/System/TextureRenderSystem.ts");
+const UUIDComponent_1 = __webpack_require__(/*! ../ECS/Component/UUIDComponent */ "./src/ECS/Component/UUIDComponent.ts");
 class EntityManager {
     constructor() {
     }
@@ -27212,15 +27216,21 @@ class EntityManager {
     GetECSEngine() {
         return this.ecsEngine;
     }
-    CreateMeshEntity(resPath, meshName, baseTex, normalTex, metroughTex, environmentTex, colorIDTex = null, posX = 0.0, posY = 0.0, posZ = 0.0) {
-        let entity = new ash_1.Entity();
+    CreateMeshEntity(meshID, meshPath, posX = 0.0, posY = 0.0, posZ = 0.0) {
+        let entity = new ash_1.Entity(meshID);
+        let uUid = ComponentPool_1.ComponentPool.get(UUIDComponent_1.UUIDComponent);
+        uUid.Initialize(meshID);
+        entity.add(uUid);
         let mesh = ComponentPool_1.ComponentPool.get(MeshComponent_1.MeshComponent);
-        mesh.Initialize(resPath, posX, posY, posZ);
+        mesh.Initialize(meshPath, posX, posY, posZ);
         entity.add(mesh);
-        let tex = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
-        tex.SetTextureInfo("QS_shendao_male_001_toushi", baseTex, normalTex, metroughTex, environmentTex, colorIDTex);
-        entity.add(tex);
         this.ecsEngine.addEntity(entity);
+    }
+    ClearAllMesh() {
+        this.ecsEngine.removeAllEntities();
+    }
+    GetEntityByUUID(uUid) {
+        return this.ecsEngine.getEntityByName(uUid);
     }
 }
 EntityManager.instance = new EntityManager();
@@ -27240,9 +27250,11 @@ exports.EntityManager = EntityManager;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Signal2_1 = __webpack_require__(/*! ../ash/signals/Signal2 */ "./src/ash/signals/Signal2.ts");
 const WebNetManager_1 = __webpack_require__(/*! ./WebNetManager */ "./src/Manager/WebNetManager.ts");
 const WebNetMessage_1 = __webpack_require__(/*! ../WebNetMessage/WebNetMessage */ "./src/WebNetMessage/WebNetMessage.ts");
+const EntityManager_1 = __webpack_require__(/*! ./EntityManager */ "./src/Manager/EntityManager.ts");
+const TextureComponent_1 = __webpack_require__(/*! ../ECS/Component/TextureComponent */ "./src/ECS/Component/TextureComponent.ts");
+const ComponentPool_1 = __webpack_require__(/*! ../ash/tools/ComponentPool */ "./src/ash/tools/ComponentPool.ts");
 class LogicWebSerivce {
     constructor() {
         this.onShowMeshList = (message) => {
@@ -27250,15 +27262,34 @@ class LogicWebSerivce {
                 return;
             let meshList = new WebNetMessage_1.MeshList();
             meshList.fromObj(message);
+            EntityManager_1.EntityManager.GetInstance().ClearAllMesh();
+            let meshCount = meshList.meshList.length;
+            for (let index = 0; index < meshCount; index++) {
+                let meshInfo = meshList.meshList[index];
+                if (meshInfo != null)
+                    EntityManager_1.EntityManager.GetInstance().CreateMeshEntity(meshInfo.uUid, meshInfo.meshName, meshInfo.posX, meshInfo.posY, meshInfo.posZ);
+            }
+        };
+        this.onUpdateTexture = (message) => {
+            if (message == null)
+                return;
+            let updateTexInfo = new WebNetMessage_1.UpdateTexture();
+            updateTexInfo.fromObj(message);
+            let entity = EntityManager_1.EntityManager.GetInstance().GetEntityByUUID(updateTexInfo.materialID.uUid);
+            if (entity != null) {
+                let texCom = entity.get(TextureComponent_1.TextureComponent);
+                if (texCom == null)
+                    texCom = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
+                texCom.SetTextureInfo(updateTexInfo.materialID.materialName, updateTexInfo.texInfo.baseTexPath, updateTexInfo.texInfo.normalTexPath, updateTexInfo.texInfo.metroughTexPath, updateTexInfo.texInfo.environmentTexPath);
+            }
         };
     }
     static GetInstance() {
         return LogicWebSerivce.instance;
     }
     Initialize() {
-        this.meshSignal = new Signal2_1.Signal2();
-        this.materialSignal = new Signal2_1.Signal2();
         WebNetManager_1.WebNetManager.GetInstance().RegisterMessage(WebNetMessage_1.WebMessageID.SHOW_MESHES, this.onShowMeshList);
+        WebNetManager_1.WebNetManager.GetInstance().RegisterMessage(WebNetMessage_1.WebMessageID.UPDATE_TEXTURE, this.onUpdateTexture);
     }
 }
 LogicWebSerivce.instance = new LogicWebSerivce();
@@ -27397,11 +27428,12 @@ exports.WebNetManager = WebNetManager;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class MeshData {
-    constructor() {
+    constructor(path = "", x = 0.0, y = 0.0, z = 0.0) {
         this.meshPath = "";
         this.posX = 0.0;
         this.posY = 0.0;
         this.posZ = 0.0;
+        this.Initialize(path, x, y, z);
     }
     Initialize(path = "", x = 0.0, y = 0.0, z = 0.0) {
         this.meshPath = path;
@@ -27426,16 +27458,16 @@ exports.MeshData = MeshData;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class TextureData {
-    constructor() {
+    constructor(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "") {
+        this.Initialize(_subMeshName, _baseTex, _normalTex, _metroughTex, _environmentTex);
     }
-    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "", _colorTexPath, _colorIDTex = null) {
+    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "") {
         this.subMeshName = _subMeshName;
         this.baseTexPath = _baseTex;
         this.normalTexPath = _normalTex;
         this.metroughTexPath = _metroughTex;
         this.environmentTexPath = _environmentTex;
-        this.colorIDTexPath = _colorTexPath;
-        this.colorIDTex = _colorIDTex;
+        this.needUpdate = true;
     }
 }
 exports.TextureData = TextureData;
@@ -27457,6 +27489,7 @@ var WebMessageID;
 (function (WebMessageID) {
     WebMessageID[WebMessageID["UNDEFINE"] = 0] = "UNDEFINE";
     WebMessageID[WebMessageID["SHOW_MESHES"] = 1] = "SHOW_MESHES";
+    WebMessageID[WebMessageID["UPDATE_TEXTURE"] = 2] = "UPDATE_TEXTURE";
 })(WebMessageID = exports.WebMessageID || (exports.WebMessageID = {}));
 class MessageInfo {
 }
@@ -27504,6 +27537,59 @@ class MeshList extends MessageInfo {
     }
 }
 exports.MeshList = MeshList;
+class MaterialID extends MessageInfo {
+    constructor(id = "", name = "") {
+        super();
+        this.uUid = id;
+        this.materialName = name;
+    }
+    fromObj(obj) {
+        this.uUid = obj.uUid;
+        this.materialName = obj.materialName;
+    }
+}
+exports.MaterialID = MaterialID;
+class TextureInfo extends MessageInfo {
+    constructor(baseTex = "", normalTex = "", metroughTex = "", environmentTex = "") {
+        super();
+        this.baseTexPath = baseTex;
+        this.normalTexPath = normalTex;
+        this.metroughTexPath = metroughTex;
+        this.environmentTexPath = environmentTex;
+    }
+    fromObj(obj) {
+        this.baseTexPath = obj.baseTexPath;
+        this.normalTexPath = obj.normalTexPath;
+        this.metroughTexPath = obj.metroughTexPath;
+        this.environmentTexPath = obj.environmentTexPath;
+    }
+}
+exports.TextureInfo = TextureInfo;
+class IDTextureInfo extends MessageInfo {
+    constructor(id = "", path = "") {
+        super();
+        this.uUid = id;
+        this.idTexPath = path;
+    }
+    fromObj(obj) {
+        this.uUid = obj.uUid;
+        this.idTexPath = obj.idTexPath;
+    }
+}
+exports.IDTextureInfo = IDTextureInfo;
+class UpdateTexture extends MessageInfo {
+    constructor(meshID = "", matID = "", baseTex = "", normalTex = "", metroughTex = "", environmentTex = "") {
+        super();
+        this.messageID = WebMessageID.UPDATE_TEXTURE;
+        this.materialID = new MaterialID(meshID, matID);
+        this.texInfo = new TextureInfo(baseTex, normalTex, metroughTex, environmentTex);
+    }
+    fromObj(obj) {
+        this.materialID.fromObj(obj.materialID);
+        this.texInfo.fromObj(obj.texInfo);
+    }
+}
+exports.UpdateTexture = UpdateTexture;
 
 
 /***/ }),

@@ -1,23 +1,25 @@
-import { Texture } from 'babylonjs';
 import { TextureData } from '../../VO/TextureData';
 export class TextureComponent
 {
     public texs: Map<string, TextureData>;
+    public needUpdate: boolean = false;
     public constructor()
     {
         this.texs = new Map<string, TextureData>();
+        this.needUpdate = false;
     }
 
     /**
      * Initialize
      */
     public SetTextureInfo( _subMeshName: string = "", _baseTexPath: string = "", _normalTexPath: string = "",
-        _metroughTexPath: string = "", _environmentTexPath: string = "", _colorIDTexPath: string = "", _colorIDTex: Texture = null )
+        _metroughTexPath: string = "", _environmentTexPath: string = "" )
     {
         let texData = new TextureData();
-        texData.Initialize( _subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath, _colorIDTexPath, _colorIDTex )
+        texData.Initialize( _subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath )
 
         this.texs.set( _subMeshName, texData );
+        this.needUpdate = true;
     }
 
 
