@@ -26894,9 +26894,9 @@ class TextureComponent {
         this.texs = new Map();
         this.needUpdate = false;
     }
-    SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _environmentTexPath = "") {
+    SetTextureInfo(_subMeshName = "", _baseTexPath = "", _normalTexPath = "", _metroughTexPath = "", _occlusionTex = "", _emissiveTex = "", _environmentTexPath = "") {
         let texData = new TextureData_1.TextureData();
-        texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath);
+        texData.Initialize(_subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _occlusionTex, _emissiveTex, _environmentTexPath);
         this.texs.set(_subMeshName, texData);
         this.needUpdate = true;
     }
@@ -27030,7 +27030,14 @@ class MeshRenderSystem extends ash_1.ListIteratingSystem {
                 return;
             }
             babylonjs_1.SceneLoader.ImportMesh("", node.mesh.GetMeshPath(), node.mesh.GetMeshName(), scene, function (newMeshes) {
-                var meshModel = newMeshes[0];
+                let meshModel = newMeshes[0];
+                let count = newMeshes.length;
+                for (let i = 0; i < count; ++i) {
+                    let mesh = newMeshes[i];
+                    if (mesh != null && mesh.subMeshes != null)
+                        meshModel = mesh;
+                }
+                console.log("MeshRenderSystem ================================= ImportMesh Path: " + node.mesh.GetMeshPath() + "  Name: " + node.mesh.GetMeshName());
                 if (meshModel != null) {
                     meshModel.position.x = node.mesh.GetPositionX();
                     meshModel.position.y = node.mesh.GetPositionY();
@@ -27114,7 +27121,7 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
         }
     }
     updateTexture(node) {
-        if (node.mesh.mesh != null) {
+        if (node.mesh.mesh != null && node.mesh.mesh.subMeshes != null) {
             let subMeshCount = node.mesh.mesh.subMeshes.length;
             for (let index = 0; index < subMeshCount; index++) {
                 let subMesh = node.mesh.mesh.subMeshes[index];
@@ -27136,20 +27143,28 @@ class TextureRenderSystem extends ash_1.ListIteratingSystem {
             pbrMaterial = new babylonjs_1.PBRMetallicRoughnessMaterial("pbr", scene);
         if (pbrMaterial.baseTexture != null)
             pbrMaterial.baseTexture.dispose();
-        if (texData.baseTexPath != null && texData.baseTexPath != null && texData.baseTexPath != "")
+        if (texData.baseTexPath != null && texData.baseTexPath != "")
             pbrMaterial.baseTexture = new babylonjs_1.Texture(texData.baseTexPath, scene);
         if (pbrMaterial.normalTexture != null)
             pbrMaterial.normalTexture.dispose();
-        if (texData.normalTexPath != null && texData.normalTexPath != null && texData.normalTexPath != "")
+        if (texData.normalTexPath != null && texData.normalTexPath != "")
             pbrMaterial.normalTexture = new babylonjs_1.Texture(texData.normalTexPath, scene);
         if (pbrMaterial.metallicRoughnessTexture != null)
             pbrMaterial.metallicRoughnessTexture.dispose();
-        if (texData.metroughTexPath != null && texData.metroughTexPath != null && texData.metroughTexPath != "")
+        if (texData.metroughTexPath != null && texData.metroughTexPath != "")
             pbrMaterial.metallicRoughnessTexture = new babylonjs_1.Texture(texData.metroughTexPath, scene);
         if (pbrMaterial.environmentTexture != null)
             pbrMaterial.environmentTexture.dispose();
-        if (texData.environmentTexPath != null && texData.environmentTexPath != null && texData.environmentTexPath != "")
+        if (texData.environmentTexPath != null && texData.environmentTexPath != "")
             pbrMaterial.environmentTexture = new babylonjs_1.Texture(texData.environmentTexPath, scene);
+        if (pbrMaterial.occlusionTexture != null)
+            pbrMaterial.occlusionTexture.dispose();
+        if (texData.occlusionTexPath != null && texData.occlusionTexPath != "")
+            pbrMaterial.occlusionTexture = new babylonjs_1.Texture(texData.occlusionTexPath, scene);
+        if (pbrMaterial.emissiveTexture != null)
+            pbrMaterial.emissiveTexture.dispose();
+        if (texData.emissiveTexPath != null && texData.emissiveTexPath != "")
+            pbrMaterial.emissiveTexture = new babylonjs_1.Texture(texData.emissiveTexPath, scene);
         mesh.material = pbrMaterial;
         texData.needUpdate = false;
     }
@@ -27177,7 +27192,6 @@ SceneManager_1.SceneManager.GetInstance().Initialize();
 EntityManager_1.EntityManager.GetInstance().Initialize();
 WebNetManager_1.WebNetManager.GetInstance().Initialize();
 LogicWebSerivce_1.LogicWebSerivce.GetInstance().Initialize();
-EntityManager_1.EntityManager.GetInstance().CreateMeshEntity("test", "http://172.16.1.110/dist/Asset/head.obj", 0.0, 0.0, 0.0);
 SceneManager_1.SceneManager.GetInstance().GetEngine().runRenderLoop(() => {
     EntityManager_1.EntityManager.GetInstance().GetECSEngine().update(SceneManager_1.SceneManager.GetInstance().GetEngine().getDeltaTime());
     SceneManager_1.SceneManager.GetInstance().Update();
@@ -27217,6 +27231,7 @@ class EntityManager {
         return this.ecsEngine;
     }
     CreateMeshEntity(meshID, meshPath, posX = 0.0, posY = 0.0, posZ = 0.0) {
+        console.log("EntityManager ================================= CreateMeshEntity");
         let entity = new ash_1.Entity(meshID);
         let uUid = ComponentPool_1.ComponentPool.get(UUIDComponent_1.UUIDComponent);
         uUid.Initialize(meshID);
@@ -27260,6 +27275,7 @@ class LogicWebSerivce {
         this.onShowMeshList = (message) => {
             if (message == null)
                 return;
+            console.log("LogicWebSerice ================================= onShowMeshList");
             let meshList = new WebNetMessage_1.MeshList();
             meshList.fromObj(message);
             EntityManager_1.EntityManager.GetInstance().ClearAllMesh();
@@ -27277,10 +27293,18 @@ class LogicWebSerivce {
             updateTexInfo.fromObj(message);
             let entity = EntityManager_1.EntityManager.GetInstance().GetEntityByUUID(updateTexInfo.materialID.uUid);
             if (entity != null) {
-                let texCom = entity.get(TextureComponent_1.TextureComponent);
-                if (texCom == null)
-                    texCom = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
-                texCom.SetTextureInfo(updateTexInfo.materialID.materialName, updateTexInfo.texInfo.baseTexPath, updateTexInfo.texInfo.normalTexPath, updateTexInfo.texInfo.metroughTexPath, updateTexInfo.texInfo.environmentTexPath);
+                let oldTexCom = entity.get(TextureComponent_1.TextureComponent);
+                if (oldTexCom != null)
+                    entity.remove(TextureComponent_1.TextureComponent);
+                let texCom = ComponentPool_1.ComponentPool.get(TextureComponent_1.TextureComponent);
+                let baseTexPath = updateTexInfo.texInfo.texPaths.get("basecolor");
+                let normalTexPath = updateTexInfo.texInfo.texPaths.get("normal");
+                let metroughTexPath = updateTexInfo.texInfo.texPaths.get("metallic");
+                let occlusionTexPath = updateTexInfo.texInfo.texPaths.get("ambientOcclusion");
+                let emissiveTexPath = updateTexInfo.texInfo.texPaths.get("height");
+                let environmentTexPath = updateTexInfo.texInfo.texPaths.get("envirinment");
+                texCom.SetTextureInfo(updateTexInfo.materialID.materialName, (baseTexPath == null) ? "" : baseTexPath, (normalTexPath == null) ? "" : normalTexPath, (metroughTexPath == null) ? "" : metroughTexPath, (occlusionTexPath == null) ? "" : occlusionTexPath, (emissiveTexPath == null) ? "" : emissiveTexPath, (environmentTexPath == null) ? "" : environmentTexPath);
+                entity.add(texCom);
             }
         };
     }
@@ -27321,15 +27345,18 @@ class SceneManager {
         this.m_engine = new babylonjs_1.Engine(this.m_canvas, true);
         this.m_scene = new babylonjs_1.Scene(this.m_engine);
         let camTarget = BABYLON.Vector3.Zero().clone();
-        camTarget.y = 5;
+        camTarget.y = 0;
         this.m_camera = new babylonjs_1.ArcRotateCamera("Camera", 0, Math.PI / 10, 10, camTarget, this.m_scene);
         this.m_camera.attachControl(this.m_canvas, true);
-        this.m_camera.setTarget(new babylonjs_1.Vector3(0, 40, 0));
-        this.m_camera.wheelDeltaPercentage /= 5;
+        this.m_camera.setTarget(new babylonjs_1.Vector3(0, 0, 0));
+        this.m_camera.wheelPrecision = 20;
+        this.m_camera.speed = 0.25;
+        this.m_camera.minZ = 0.01;
         var light1 = new babylonjs_1.DirectionalLight("light1", new babylonjs_1.Vector3(1, -1, 0), this.m_scene);
         var light2 = new babylonjs_1.DirectionalLight("light2", new babylonjs_1.Vector3(1, 0, 0), this.m_scene);
         var light2 = new babylonjs_1.DirectionalLight("light3", new babylonjs_1.Vector3(1, 0, 1), this.m_scene);
         light1.diffuse = new BABYLON.Color3(10, 10, 10);
+        this.m_scene.debugLayer.show();
     }
     GetScene() {
         return this.m_scene;
@@ -27403,6 +27430,7 @@ class WebNetManager {
         if (message == null)
             return;
         let messageID = message.messageID;
+        console.log("OnWebNetMessage ================================= " + messageID);
         if (this.allSignals.has(messageID)) {
             let signal = this.allSignals.get(messageID);
             if (signal != null)
@@ -27458,14 +27486,16 @@ exports.MeshData = MeshData;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class TextureData {
-    constructor(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "") {
-        this.Initialize(_subMeshName, _baseTex, _normalTex, _metroughTex, _environmentTex);
+    constructor(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _occlusionTex = "", _emissiveTex = "", _environmentTex = "") {
+        this.Initialize(_subMeshName, _baseTex, _normalTex, _metroughTex, _occlusionTex, _emissiveTex, _environmentTex);
     }
-    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _environmentTex = "") {
+    Initialize(_subMeshName = "", _baseTex = "", _normalTex = "", _metroughTex = "", _occlusionTex = "", _emissiveTex = "", _environmentTex = "") {
         this.subMeshName = _subMeshName;
         this.baseTexPath = _baseTex;
         this.normalTexPath = _normalTex;
         this.metroughTexPath = _metroughTex;
+        this.occlusionTexPath = _occlusionTex;
+        this.emissiveTexPath = _emissiveTex;
         this.environmentTexPath = _environmentTex;
         this.needUpdate = true;
     }
@@ -27528,9 +27558,10 @@ class MeshList extends MessageInfo {
         let array = obj.meshList;
         if (array == null)
             return;
-        for (let i = 0; i <= array.length; i++) {
+        for (let i = 0; i < array.length; i++) {
             let data = array[i];
             let meshInfo = new MeshInfo();
+            console.log(data);
             meshInfo.fromObj(data);
             this.meshList.push(meshInfo);
         }
@@ -27552,16 +27583,12 @@ exports.MaterialID = MaterialID;
 class TextureInfo extends MessageInfo {
     constructor(baseTex = "", normalTex = "", metroughTex = "", environmentTex = "") {
         super();
-        this.baseTexPath = baseTex;
-        this.normalTexPath = normalTex;
-        this.metroughTexPath = metroughTex;
-        this.environmentTexPath = environmentTex;
+        this.texPaths = new Map();
     }
     fromObj(obj) {
-        this.baseTexPath = obj.baseTexPath;
-        this.normalTexPath = obj.normalTexPath;
-        this.metroughTexPath = obj.metroughTexPath;
-        this.environmentTexPath = obj.environmentTexPath;
+        obj.texPaths.forEach((value, key) => {
+            this.texPaths.set(key, value);
+        });
     }
 }
 exports.TextureInfo = TextureInfo;

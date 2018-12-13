@@ -8,7 +8,7 @@ EntityManager.GetInstance().Initialize();
 WebNetManager.GetInstance().Initialize();
 LogicWebSerivce.GetInstance().Initialize();
 
-EntityManager.GetInstance().CreateMeshEntity( "test", "http://172.16.1.110/dist/Asset/head.obj", 0.0, 0.0, 0.0 );
+//EntityManager.GetInstance().CreateMeshEntity( "test", "http://172.16.1.110/bin/dist/Asset/Torus.obj", 0.0, 0.0, 0.0 );
 // EntityManager.GetInstance().CreateMeshEntity( "http://172.16.1.110/dist/Asset/", "DamagedHelmet.obj", "Default_albedo.jpg", "Default_normal.jpg",
 //     "Default_metalRoughness.jpg", "environment.dds" )
 

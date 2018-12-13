@@ -1,0 +1,276 @@
+syntax="proto2";
+
+import "common.proto";
+
+package client_to_svr;
+
+message get_verification_code
+{
+    required string phone_num = 1;
+}
+
+message register_info
+{
+    required string email = 1;
+    required string name = 2;
+    required string passwnd = 3;
+    required string phone_num = 4;
+    required string verification_code = 5;
+}
+
+message user_login_info{
+    required string name = 1;
+    required string passwnd = 2;
+}
+
+message client_change_pwd
+{
+    required string old_pwd = 1;
+    required string new_pwd = 2;
+}
+
+message create_project
+{
+    required string parent = 1;
+    required string project = 2;
+}
+
+message add_group_into_project
+{
+    required string parent = 1;
+    required string project = 2;
+    required string group = 3;
+}
+
+message remove_group_from_project
+{
+    required string parent = 1;
+    required string project = 2;
+    required string group = 3;
+}
+
+message add_user_into_project
+{
+    required string parent = 1;
+    required string project = 2;
+    required string name = 3;
+}
+
+message remove_user_from_project
+{
+    required string parent = 1;
+    required string project = 2;
+    required string name = 3;
+}
+
+message create_group
+{
+    required string group = 1;
+}
+
+message add_user_into_group
+{
+    required string group = 1;
+    required string name = 2;
+}
+
+message remove_user_from_group
+{
+    required string group = 1;
+    required string name = 2;
+}
+
+message set_user_project_permission
+{
+    required string name = 1;
+    required string parent = 2;
+    required string project = 3;
+    repeated common.permission_type permission = 4;
+}
+
+message set_group_project_permission
+{
+    required string group = 1;
+    required string parent = 2;
+    required string project = 3;
+    repeated common.permission_type permission = 4;
+}
+
+message get_project_member
+{
+    required string parent = 1;
+    required string project = 2;
+}
+
+message get_group_member
+{
+    required string group = 1;
+}
+
+message get_user_project_permission
+{
+    required string name = 1;
+    required string parent = 2;
+    required string project = 3;
+}
+
+message get_group_project_permission
+{
+    required string group = 1;
+    required string parent = 2;
+    required string project = 3;
+}
+
+message get_all_project
+{
+}
+
+message get_all_group
+{
+}
+
+message confirm_verification_code
+{
+    required string verification_code = 1;
+}
+
+message restore_passwnd
+{
+    required string passwnd = 1;
+}
+
+message confirm_mail_verification_code
+{
+    required string mail = 1;
+}
+
+message confirm_phone_verification_code
+{
+    required string phone = 1;
+}
+
+message root_add_user_peas
+{
+    required string target_name = 1;
+    required int32 add_peas_num = 2;
+}
+
+message manger_alloc_peas
+{
+    required string target_name = 1;
+    required int32 add_peas_num = 2;
+}
+
+message root_add_group_peas
+{
+    required string group = 1;
+    required int32 add_peas_num = 2;
+}
+
+message root_add_project_peas
+{
+    required string parent = 1;
+    required string project = 2;
+    required int32 add_peas_num = 3;
+}
+
+message set_group_replace_peas
+{
+    required string group = 1;
+    required bool pay_for_sd = 2;
+}
+
+message set_project_replace_peas
+{
+    required string project = 1;
+    required bool pay_for_sd = 2;
+}
+
+message editor_repository_group
+{
+	required string project = 1; // 项目名称
+	required string sub_project = 2;	// 子项目
+	required string parent = 3;	// 父分组 为""表示没有
+	required string name = 4;	// 分组名称
+	required common.repository_type repository_type = 5;	// 库类型
+}
+
+message get_project_repository
+{
+    required string project = 1; // 项目名称
+    required string sub_project = 2;	// 子项目
+    required common.repository_type repository_type = 3;	// 库类型
+}
+
+enum client_msg_id{
+    user_register_id = 1;
+    user_login_id = 2;
+    client_change_pwd_id = 3;
+    create_project_id = 4;
+    add_group_into_project_id = 5;
+    remove_group_from_project_id = 6;
+    add_user_into_project_id = 7;
+    remove_user_from_project_id = 8;
+    create_group_id = 9;
+    add_user_into_group_id = 10;
+    remove_user_from_group_id = 11;
+    set_user_project_permission_id = 12;
+    set_group_project_permission_id = 13;
+    get_project_member_id = 14;
+    get_group_member_id = 15;
+    get_user_project_permission_id = 16;
+    get_group_project_permission_id = 17;
+    get_all_project_id = 18;
+    get_all_group_id = 19;
+    get_verification_code_id = 20;
+    restore_passwnd_id = 21;
+    confirm_verification_code_id = 22;
+    confirm_mail_verification_code_id = 23;
+    confirm_phone_verification_code_id = 24;
+    root_add_user_peas_id = 25;
+    manger_alloc_peas_id = 26;
+    root_add_group_peas_id = 27;
+    root_add_project_peas_id = 28;
+    set_group_replace_peas_id = 29;
+    set_project_replace_peas_id = 30;
+    add_repository_group_id = 31;
+    get_project_repository_id = 32;
+	delete_repository_group_id = 33;
+}
+
+message client_msg{
+    required client_msg_id _id = 1;
+    optional register_info _register_info = 2; //client_msg_id user_register_id = 1
+    optional user_login_info _user_login_info = 3; //client_msg_id user_login_id = 2
+    optional client_change_pwd _client_change_pwd = 4; //client_msg_id client_change_pwd_id = 3
+    optional create_project _create_project = 5; //client_msg_id create_project_id = 4
+    optional add_group_into_project _add_group_into_project = 6; //client_msg_id add_group_into_project_id = 5
+    optional remove_group_from_project _remove_group_from_project = 7; //client_msg_id remove_group_from_project_id = 6
+    optional add_user_into_project _add_user_into_project = 8; //client_msg_id add_user_into_project_id = 7
+    optional remove_user_from_project _remove_user_from_project = 9; //client_msg_id remove_user_from_project_id = 8
+    optional create_group _create_group = 10; //client_msg_id create_group_id = 9
+    optional add_user_into_group _add_user_into_group = 11; //client_msg_id add_user_into_group_id = 10
+    optional remove_user_from_group _remove_user_from_group = 12; //client_msg_id remove_user_from_group_id = 11
+    optional set_user_project_permission _set_user_project_permission = 13; //client_msg_id set_user_project_permission_id = 12
+    optional set_group_project_permission _set_group_project_permission = 14; //client_msg_id set_group_project_permission = 13;
+    optional get_project_member _get_project_member = 15; //client_msg_id get_project_member_id = 14
+    optional get_group_member _get_group_member = 16; //client_msg_id get_group_member_id = 15
+    optional get_user_project_permission _get_user_project_permission = 17; //client_msg_id get_user_project_permission_id = 16
+    optional get_group_project_permission _get_group_project_permission = 18; //client_msg_id get_group_project_permission_id = 17
+    optional get_all_project _get_all_project = 19; //client_msg_id get_all_project_id = 18
+    optional get_all_group _get_all_group = 20; //client_msg_id get_all_group_id = 19
+    optional get_verification_code _get_verification_code = 21; //client_msg_id get_verification_code_id = 20
+    optional restore_passwnd _restore_passwnd = 22; //client_msg_id restore_passwnd_id = 21
+    optional confirm_verification_code _confirm_verification_code = 23; //client_msg_id confirm_verification_code_id = 22
+    optional confirm_mail_verification_code _confirm_mail_verification_code = 24; //client_msg_id confirm_mail_verification_code_id = 23
+    optional confirm_phone_verification_code _confirm_phone_verification_code = 25; //client_msg_id confirm_phone_verification_code_id = 24
+    optional root_add_user_peas _root_add_user_peas = 26; //client_msg_id root_add_peas_id = 25
+    optional manger_alloc_peas _manger_alloc_peas = 27; //client_msg_id manger_alloc_peas_id = 26
+    optional root_add_group_peas _root_add_group_peas = 28; //client_msg_id root_add_group_peas_id = 27
+    optional root_add_project_peas _root_add_project_peas = 29; //client_msg_id root_add_project_peas_id = 28
+    optional set_group_replace_peas _set_group_replace_peas = 30; //client_msg_id set_group_replace_peas_id = 29
+    optional set_project_replace_peas _set_project_replace_peas = 31; //client_msg_id set_project_replace_peas_id = 30
+    optional editor_repository_group _add_repository_group = 32; //client_msg_id add_repository_group_id = 31
+    optional get_project_repository _get_project_repository = 33; //client_msg_id get_project_repository_id = 32
+	optional editor_repository_group _delete_repository_group = 34; //client_msg_id delete_repository_group_id = 33
+}

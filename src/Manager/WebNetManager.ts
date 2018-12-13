@@ -72,6 +72,8 @@ export class WebNetManager
 
         let messageID: WebMessageID = message.messageID;
 
+        console.log( "OnWebNetMessage ================================= " + messageID );
+
         if ( this.allSignals.has( messageID ) )
         {
             let signal: Signal1<any> = this.allSignals.get( messageID );

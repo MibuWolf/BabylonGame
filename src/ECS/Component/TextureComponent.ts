@@ -13,10 +13,10 @@ export class TextureComponent
      * Initialize
      */
     public SetTextureInfo( _subMeshName: string = "", _baseTexPath: string = "", _normalTexPath: string = "",
-        _metroughTexPath: string = "", _environmentTexPath: string = "" )
+        _metroughTexPath: string = "", _occlusionTex: string = "", _emissiveTex: string = "", _environmentTexPath: string = "" )
     {
         let texData = new TextureData();
-        texData.Initialize( _subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _environmentTexPath )
+        texData.Initialize( _subMeshName, _baseTexPath, _normalTexPath, _metroughTexPath, _occlusionTex, _emissiveTex, _environmentTexPath )
 
         this.texs.set( _subMeshName, texData );
         this.needUpdate = true;

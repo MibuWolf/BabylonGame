@@ -1,0 +1,58 @@
+syntax="proto2";
+
+package common;
+
+enum permission_type{
+    root=-1;
+    manage=0;
+    read = 1;
+    upload=2;
+    modify=3;
+    delete=4;
+    render=5;
+    all_look=6;//跨项目浏览内部项目权限
+    all_project_remove=7;//项目删除权限
+    all_project_modify=8;//项目修改权限
+    all_project_GM=9;//项目GM权限（改点等）
+
+    subitem_look =10;//子项目查看权限
+    subitem_modify =11;//子项目修改权限
+
+    common_project_look=12;//公共项目查看权限
+    common_project_modify=13;//公共项目Fork权限
+
+    project_add_energy =14;//项目加点权限
+    project_remove_energy =15;//项目分点权限
+    project_allot_permission =16;//项目权限分配权限
+    project_mange_people =17;//项目人员管理权限
+    project_transfer_permission =18;//项目权限移交权限
+
+    material_lib_look =19;//物质库查看权限
+    material_lib_modify =20;//物质库修改权限
+    material_effect_modify =21;//物质效果修改权限
+    material_fork =22;//物质Fork权限
+    material_collect =23;//物质收藏权限
+    material_3d_look =24;//物质3D预览权限
+
+    model_look=25;//模型库查看权限
+    model_upload=26;//模型上传权限
+    content_manage =27;//容量配额权限
+    normal_bake=28;//法线烘培权限
+    AO_build=29;//AO图生成权限
+    UV_build_ID =30;//UV生成ID图权限
+
+    map_look =31;//贴图库浏览权限
+    map_lib_modify=32;//帖图库修改权限
+
+    texture_look =33;//材质预览权限
+    texture_modify=34;//材质库修改权限
+    texture_output_sbsar =35;//材质库输出sbsar权限
+    texture_out_map =36;//材质库输出贴图权限
+}
+
+enum repository_type{
+	dynaimc = 0;
+	substance = 1;
+	model = 2;
+	action = 3;
+}

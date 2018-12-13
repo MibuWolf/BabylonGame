@@ -40,6 +40,7 @@ export class EntityManager
     */
     public CreateMeshEntity( meshID: string, meshPath: string, posX: number = 0.0, posY: number = 0.0, posZ: number = 0.0 )
     {
+        console.log( "EntityManager ================================= CreateMeshEntity" );
         let entity: Entity = new Entity( meshID );
 
         let uUid = ComponentPool.get( UUIDComponent );

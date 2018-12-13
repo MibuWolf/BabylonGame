@@ -1,0 +1,517 @@
+{
+  "0": {
+    "ID": 0,
+    "cn": "成功",
+    "en": "OK"
+  },
+  "1": {
+    "ID": 1,
+    "cn": "用户名由3~15个字符组成",
+    "en": "The user name is composed of 3~15 characters！"
+  },
+  "2": {
+    "ID": 2,
+    "cn": "用户名由3~15个字符组成",
+    "en": "The user name is composed of 3~15 characters！"
+  },
+  "3": {
+    "ID": 3,
+    "cn": "请填写密码，长度为6~20个字符",
+    "en": "Please fill in the passwords, 6~20 characters in length！"
+  },
+  "4": {
+    "ID": 4,
+    "cn": "密码弱",
+    "en": "Phone Format Error!"
+  },
+  "5": {
+    "ID": 5,
+    "cn": "两次输出的密码不一致",
+    "en": "The password for the two output is inconsistent！"
+  },
+  "6": {
+    "ID": 6,
+    "cn": "请输入正确的邮箱地址",
+    "en": "Please input the correct email address！"
+  },
+  "7": {
+    "ID": 7,
+    "cn": "请输入正确的手机号码",
+    "en": "Please enter the correct cell phone number！"
+  },
+  "8": {
+    "ID": 8,
+    "cn": "账号已存在",
+    "en": "Account Name Exist!"
+  },
+  "9": {
+    "ID": 9,
+    "cn": "同意相关协议",
+    "en": "Need To Agree The Law!"
+  },
+  "10": {
+    "ID": 10,
+    "cn": "邮箱已经注册过",
+    "en": "The Email Has Registed!"
+  },
+  "11": {
+    "ID": 11,
+    "cn": "用户名已经存在",
+    "en": "The Name Has Used!"
+  },
+  "12": {
+    "ID": 12,
+    "cn": "登陆用户名不正确",
+    "en": "Incorrect login user name!"
+  },
+  "13": {
+    "ID": 13,
+    "cn": "登陆用户密码不正确",
+    "en": "Incorrect login password"
+  },
+  "14": {
+    "ID": 14,
+    "cn": "用户名不能为空",
+    "en": "The username cannot be empty"
+  },
+  "15": {
+    "ID": 15,
+    "cn": "密码不能为空",
+    "en": "The password cannot be empty"
+  },
+  "16": {
+    "ID": 16,
+    "cn": "找回密码的邮箱不存在",
+    "en": "The email address for retrieving the password does not exist"
+  },
+  "17": {
+    "ID": 17,
+    "cn": "找回密码的手机号码不存在",
+    "en": "The phone number to retrieve the password does not exist"
+  },
+  "18": {
+    "ID": 18,
+    "cn": "找回密码的验证码错误",
+    "en": "Verification code error"
+  },
+  "19": {
+    "ID": 19,
+    "cn": "找回密码的验证码不能为空",
+    "en": "Verification code cannot be empty"
+  },
+  "20": {
+    "ID": 20,
+    "cn": "找回密码的验证码超时",
+    "en": "Verification code time out"
+  },
+  "21": {
+    "ID": 21,
+    "cn": "请输入正确的验证码",
+    "en": "Please input the correct verification code！"
+  },
+  "22": {
+    "ID": 22,
+    "cn": "验证码已过时",
+    "en": "The verification code is obsolete"
+  },
+  "23": {
+    "ID": 23,
+    "cn": "手机号码已经注册过",
+    "en": "The phone has used!"
+  },
+  "1001": {
+    "ID": 1001,
+    "cn": "协议内容",
+    "en": "Tencent regards user information security and privacy protection as its \\\"lifeline\\\". We adhere to the \\\"all value-based\\\" concept, committed to improving information processing transparency, enhance your ease of information management, protect your infor"
+  },
+  "1002": {
+    "ID": 1002,
+    "cn": "基于物质渲染",
+    "en": "Physically Based Rendering"
+  },
+  "1003": {
+    "ID": 1003,
+    "cn": "材质库工具",
+    "en": "Material tools"
+  },
+  "1004": {
+    "ID": 1004,
+    "cn": "会员登登陆",
+    "en": "Member Login"
+  },
+  "1005": {
+    "ID": 1005,
+    "cn": "注册",
+    "en": "Registration"
+  },
+  "1006": {
+    "ID": 1006,
+    "cn": "找回密码",
+    "en": "Retrieve the password"
+  },
+  "1007": {
+    "ID": 1007,
+    "cn": "密码:",
+    "en": "Password:"
+  },
+  "1008": {
+    "ID": 1008,
+    "cn": "确认密码:",
+    "en": "Verify Pwd:"
+  },
+  "1009": {
+    "ID": 1009,
+    "cn": "账号:",
+    "en": "Account:"
+  },
+  "1010": {
+    "ID": 1010,
+    "cn": "记住密码",
+    "en": "Member Login:"
+  },
+  "1011": {
+    "ID": 1011,
+    "cn": "刷新",
+    "en": "Refresh"
+  },
+  "1012": {
+    "ID": 1012,
+    "cn": "没有账号？",
+    "en": "No Account?"
+  },
+  "1013": {
+    "ID": 1013,
+    "cn": "注册",
+    "en": "Sign Up"
+  },
+  "1014": {
+    "ID": 1014,
+    "cn": "忘记密码？",
+    "en": "Forget password?"
+  },
+  "1015": {
+    "ID": 1015,
+    "cn": "登陆",
+    "en": "Login"
+  },
+  "1016": {
+    "ID": 1016,
+    "cn": "邮箱:",
+    "en": "Email:"
+  },
+  "1017": {
+    "ID": 1017,
+    "cn": "发送验证码",
+    "en": "Send verification code"
+  },
+  "1018": {
+    "ID": 1018,
+    "cn": "我已经阅读和同意相关条文",
+    "en": "I have read and agree to the relevant terms of"
+  },
+  "1019": {
+    "ID": 1019,
+    "cn": "条文内容",
+    "en": "service and privacy policy"
+  },
+  "1020": {
+    "ID": 1020,
+    "cn": "注册",
+    "en": "Register"
+  },
+  "1021": {
+    "ID": 1021,
+    "cn": "找回密码",
+    "en": "Retrieve the password"
+  },
+  "1022": {
+    "ID": 1022,
+    "cn": "手机找回",
+    "en": "Cell phone retrieve password"
+  },
+  "1023": {
+    "ID": 1023,
+    "cn": "邮箱找回",
+    "en": "Email retrieve password"
+  },
+  "1024": {
+    "ID": 1024,
+    "cn": "下一步",
+    "en": "Next Step"
+  },
+  "1025": {
+    "ID": 1025,
+    "cn": "验证",
+    "en": "Authentication"
+  },
+  "1026": {
+    "ID": 1026,
+    "cn": "填写手机号码",
+    "en": "Please fill in the correct cell phone number"
+  },
+  "1027": {
+    "ID": 1027,
+    "cn": "重置密码",
+    "en": "Set new password"
+  },
+  "1028": {
+    "ID": 1028,
+    "cn": "填写新密码",
+    "en": "Set your new passworld"
+  },
+  "1029": {
+    "ID": 1029,
+    "cn": "完成",
+    "en": "Complete"
+  },
+  "1030": {
+    "ID": 1030,
+    "cn": "新密码设置成功",
+    "en": "You have already finished"
+  },
+  "1031": {
+    "ID": 1031,
+    "cn": "填写邮箱",
+    "en": "Please fill in the correct email address"
+  },
+  "1032": {
+    "ID": 1032,
+    "cn": "认证",
+    "en": "authentication"
+  },
+  "1033": {
+    "ID": 1033,
+    "cn": "您的新密码设置完成",
+    "en": "Your new password has been set up"
+  },
+  "1034": {
+    "ID": 1034,
+    "cn": "恭喜您注册成功",
+    "en": "Congratulations on your successful registration"
+  },
+  "1035": {
+    "ID": 1035,
+    "cn": "您注册的关键信息如下",
+    "en": "your registration information is as follows"
+  },
+  "1036": {
+    "ID": 1036,
+    "cn": "电话：",
+    "en": "Phone:"
+  },
+  "1037": {
+    "ID": 1037,
+    "cn": "注销",
+    "en": "login out"
+  },
+  "1038": {
+    "ID": 1038,
+    "cn": "公共资源",
+    "en": "PublicAssets"
+  },
+  "1039": {
+    "ID": 1039,
+    "cn": "所有资源",
+    "en": "All Assets"
+  },
+  "1040": {
+    "ID": 1040,
+    "cn": "动态",
+    "en": "DynamicInfo"
+  },
+  "1041": {
+    "ID": 1041,
+    "cn": "物质库",
+    "en": "SubstanceLib"
+  },
+  "1042": {
+    "ID": 1042,
+    "cn": "模型库",
+    "en": "ModelLib"
+  },
+  "1043": {
+    "ID": 1043,
+    "cn": "动作库",
+    "en": "ActionLib"
+  },
+  "1044": {
+    "ID": 1044,
+    "cn": "个人专用",
+    "en": "Personality"
+  },
+  "1045": {
+    "ID": 1045,
+    "cn": "我的收藏",
+    "en": "my favorite"
+  },
+  "1046": {
+    "ID": 1046,
+    "cn": "编辑",
+    "en": "editor"
+  },
+  "1047": {
+    "ID": 1047,
+    "cn": "删除",
+    "en": "delete"
+  },
+  "1048": {
+    "ID": 1048,
+    "cn": "排序方式",
+    "en": "sort by"
+  },
+  "1049": {
+    "ID": 1049,
+    "cn": "添加上传",
+    "en": "Upload"
+  },
+  "1050": {
+    "ID": 1050,
+    "cn": "物质管理",
+    "en": "SubstanceManager"
+  },
+  "1051": {
+    "ID": 1051,
+    "cn": "视图",
+    "en": "View"
+  },
+  "1052": {
+    "ID": 1052,
+    "cn": "隐藏编辑区",
+    "en": "Hide Editor"
+  },
+  "1053": {
+    "ID": 1053,
+    "cn": "显示编辑区",
+    "en": "Show Editor"
+  },
+  "1054": {
+    "ID": 1054,
+    "cn": "保存",
+    "en": "Save"
+  },
+  "1055": {
+    "ID": 1055,
+    "cn": "信息",
+    "en": "Info"
+  },
+  "1056": {
+    "ID": 1056,
+    "cn": "编辑",
+    "en": "Editor"
+  },
+  "1057": {
+    "ID": 1057,
+    "cn": "更新",
+    "en": "Update"
+  },
+  "1058": {
+    "ID": 1058,
+    "cn": "添加上传",
+    "en": "Upload File"
+  },
+  "1059": {
+    "ID": 1059,
+    "cn": "添加上传的文件将保存在云端，方便随时查阅",
+    "en": "The uploaded files will be saved in the cloud"
+  },
+  "1060": {
+    "ID": 1060,
+    "cn": "物质名称",
+    "en": "SubstanceName"
+  },
+  "1061": {
+    "ID": 1061,
+    "cn": "物质描述",
+    "en": "SubstanceDescribe"
+  },
+  "1062": {
+    "ID": 1062,
+    "cn": "日志提交信息",
+    "en": "Log submission information"
+  },
+  "1063": {
+    "ID": 1063,
+    "cn": "文件路径",
+    "en": "File Path"
+  },
+  "1064": {
+    "ID": 1064,
+    "cn": "打开",
+    "en": "Open"
+  },
+  "1065": {
+    "ID": 1065,
+    "cn": "确认上传",
+    "en": "Submit Upload"
+  },
+  "1066": {
+    "ID": 1066,
+    "cn": "取消",
+    "en": "Cancel"
+  },
+  "1067": {
+    "ID": 1067,
+    "cn": "上传路径:",
+    "en": "Save Path:"
+  },
+  "1068": {
+    "ID": 1068,
+    "cn": "分组选择",
+    "en": "Choose Group"
+  },
+  "1069": {
+    "ID": 1069,
+    "cn": "物质预设",
+    "en": "Substance Prefab"
+  },
+  "1070": {
+    "ID": 1070,
+    "cn": "物质标签",
+    "en": "Substance Tag"
+  },
+  "1071": {
+    "ID": 1071,
+    "cn": "上传进度",
+    "en": "Upload Progress"
+  },
+  "1072": {
+    "ID": 1072,
+    "cn": "文件检查",
+    "en": "Files Check"
+  },
+  "1073": {
+    "ID": 1073,
+    "cn": "PBR检查",
+    "en": "PBR Check"
+  },
+  "1074": {
+    "ID": 1074,
+    "cn": "性能检查",
+    "en": "Profile Check"
+  },
+  "1075": {
+    "ID": 1075,
+    "cn": "贴图输出",
+    "en": "Textures Output"
+  },
+  "1076": {
+    "ID": 1076,
+    "cn": "生成缩略图",
+    "en": "Thumbs Output"
+  },
+  "1077": {
+    "ID": 1077,
+    "cn": "入库",
+    "en": "Import to Repository"
+  },
+  "1078": {
+    "ID": 1078,
+    "cn": "通过",
+    "en": "Pass Over"
+  },
+  "1079": {
+    "ID": 1079,
+    "cn": "返回列表",
+    "en": "Return Back"
+  }
+}

@@ -1,0 +1,192 @@
+syntax="proto2";
+
+import "common.proto";
+
+package svr_to_client;
+
+enum status_code
+{
+    create_parent_project_success = -25;
+    create_project_dir_success = -24;
+    set_project_replace_peas_success = -23;
+    set_group_replace_peas_success = -22;
+    root_add_project_peas_success = -21;
+    root_add_group_peas_success = -20;
+    manger_alloc_peas_success = -19;
+    root_add_user_peas_success = -18;
+    send_verification_code_phone_success = -17;
+    send_verification_code_mail_success = -16;
+    confirm_verification_code_success = -15;
+    restore_pwd_success = -14;
+    set_group_project_permission_success = -13;
+    remove_user_from_group_success = -12;
+    add_user_into_group_success = -11;
+    create_group_success = -10;
+    set_user_project_permission_success = -9;
+    remove_user_from_project_success = -8;
+    add_user_into_project_success = -7;
+    remove_group_from_project_success = -6;
+    add_group_into_project_success = -5;
+    create_project_success = -4;
+    change_pwd_success = -3;
+    user_login_success = -2;
+    user_register_success = -1;
+    success = 0;
+    pwd_is_wrong = 1;
+    verification_code_is_wrong = 2;
+    no_authority = 3;
+    no_permission = 4;
+    repeated_email = 5;
+    repeated_name = 6;
+    repeated_phone = 7;
+    invaild_user = 8;
+    unverified_verification_code = 9;
+    verification_code_timeout = 10;
+    wrong_email = 11;
+    wrong_phone = 12;
+    not_root = 13;
+    render_failed = 14;
+    invalid_resource = 15;
+    not_in_target_lib = 16;
+    pbr_check_failed = 17;
+    prefile_check_failed = 18;
+    repeated_sbs_file = 19;
+    invalid_sbs_file = 20;
+    invalid_parent_dir = 21;
+    invalid_parent = 22;
+    project_is_exist = 23;
+}
+
+message status_code_ntf
+{
+    required status_code _code = 1;
+}
+
+message user_token{
+    required string token = 1;
+}
+
+message root_permission{
+    repeated common.permission_type permission_list = 1;
+}
+
+message user_permission{
+    //repeated common.permission_type all_permission_list = 1;
+    repeated common.permission_type user_permission_list = 1;
+}
+
+message project_member
+{
+    required string parent_project = 1;
+    required string project_name = 2;
+    repeated string groups = 3;
+    repeated project_user_data users = 4;
+}
+
+message project_user_data
+{
+    required string name = 1; //保存用户name
+    repeated common.permission_type permission_list = 2; //保存用户权限
+}
+
+message group_member
+{
+    required string group_name = 1;
+    repeated string users = 2; //保存用户name
+}
+
+message all_group_list
+{
+    repeated string group = 1;
+}
+
+message group_permission{
+    required string group_name = 1;
+    repeated common.permission_type group_permission_list = 2;
+}
+
+message project
+{
+    required string project = 1;
+    required string sub_project = 2;
+}
+message all_project_list
+{
+    repeated project project = 1;
+}
+
+message verification_code_ntf
+{
+    optional string verification_code = 1;
+}
+
+message project_repository
+{
+    required string project = 1;
+    required string sub_project = 2;
+	required common.repository_type repository = 3;
+	repeated repository_group groups = 4;
+}
+
+message repository_group
+{
+	required string name = 1;
+	repeated repository_group_leaf leafs = 2;
+}
+
+message repository_group_leaf
+{
+	required string name = 1; // 子分组名称
+	required int32 res_num = 2;	// 子分组下的资源数目
+}
+
+message create_project_result
+{
+    required string parent = 1;
+    required string project = 2;
+}
+
+message editor_repository_group
+{
+	required string project = 1; // 项目名称
+	required string sub_project = 2;	// 子项目
+	required string parent = 3;	// 父分组 为""表示没有
+	required string name = 4;	// 分组名称
+	required common.repository_type repository_type = 5;	// 库类型
+}
+
+enum svr_msg_id
+{
+    status_code_ntf_id = 1;
+    user_token_id = 2;
+    root_permission_id = 3;
+    user_permission_id = 4;
+    project_member_id = 5;
+    group_member_id = 6;
+    all_group_list_id = 7;
+    group_permission_id = 8;
+    all_project_list_id = 9;
+    verification_code_ntf_id = 10;
+    project_repository_id = 11;
+    create_project_result_id = 12;
+    create_repository_group_id =13;
+	delete_repository_group_id =14;
+}
+
+message svr_msg{
+    required svr_msg_id _id = 1;
+    optional status_code_ntf _status_code_ntf = 2; //svr_msg_id status_code_ntf_id = 1
+    optional user_token _user_token = 3; //svr_msg_id user_token_id = 2
+    optional root_permission _root_permission = 4; //svr_msg_id root_permission_id = 3
+    optional user_permission _user_permission = 5; //svr_msg_id user_permission_id = 4
+    optional project_member _project_member = 6; //svr_msg_id project_member_id = 5
+    optional group_member _group_member = 7; //svr_msg_id group_member_id = 6
+    optional all_group_list _all_group_list = 8; //svr_msg_id group_member_id = 7
+    optional group_permission _group_permission = 9; //svr_msg_id group_member_id = 8
+    optional all_project_list _all_project_list = 10; //svr_msg_id group_member_id = 9
+    optional verification_code_ntf _verification_code_ntf = 11; //svr_msg_id verification_code_ntf_id = 10
+    optional project_repository _project_repository = 12;	// svr_msg_id project_repository_id = 11
+    optional create_project_result _create_project_result = 13; // svr_msg_id create_project_result_id = 12
+    optional editor_repository_group _create_repository_group = 14; // create_repository_group_id =13
+	optional editor_repository_group _delete_repository_group = 15; // create_repository_group_id =14
+}

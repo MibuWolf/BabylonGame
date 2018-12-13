@@ -30,6 +30,8 @@ export class LogicWebSerivce
         if ( message == null )
             return;
 
+        console.log( "LogicWebSerice ================================= onShowMeshList" );
+
         let meshList: MeshList = new MeshList();
         meshList.fromObj( message );
 
@@ -60,13 +62,26 @@ export class LogicWebSerivce
 
         if ( entity != null )
         {
-            let texCom: TextureComponent = entity.get( TextureComponent );
+            let oldTexCom: TextureComponent = entity.get( TextureComponent );
 
-            if ( texCom == null )
-                texCom = ComponentPool.get( TextureComponent );
+            if ( oldTexCom != null )
+                entity.remove( TextureComponent );
 
-            texCom.SetTextureInfo( updateTexInfo.materialID.materialName, updateTexInfo.texInfo.baseTexPath,
-                updateTexInfo.texInfo.normalTexPath, updateTexInfo.texInfo.metroughTexPath, updateTexInfo.texInfo.environmentTexPath )
+            let texCom = ComponentPool.get( TextureComponent );
+
+            let baseTexPath: string = updateTexInfo.texInfo.texPaths.get( "basecolor" );
+            let normalTexPath: string = updateTexInfo.texInfo.texPaths.get( "normal" );
+            let metroughTexPath: string = updateTexInfo.texInfo.texPaths.get( "metallic" );
+            let occlusionTexPath: string = updateTexInfo.texInfo.texPaths.get( "ambientOcclusion" );
+            let emissiveTexPath: string = updateTexInfo.texInfo.texPaths.get( "height" );
+            let environmentTexPath: string = updateTexInfo.texInfo.texPaths.get( "envirinment" );
+
+            texCom.SetTextureInfo( updateTexInfo.materialID.materialName, ( baseTexPath == null ) ? "" : baseTexPath,
+                ( normalTexPath == null ) ? "" : normalTexPath, ( metroughTexPath == null ) ? "" : metroughTexPath,
+                ( occlusionTexPath == null ) ? "" : occlusionTexPath,
+                ( emissiveTexPath == null ) ? "" : emissiveTexPath, ( environmentTexPath == null ) ? "" : environmentTexPath )
+
+            entity.add( texCom );
         }
     }
 

@@ -44,6 +44,9 @@
     <script type="text/javascript" src="libs/laya.tiledmap.js"></script>
 	<!--提供了制作UI的各种组件实现-->
     <script type="text/javascript" src="libs/laya.ui.js"></script>
+	<!--调试库-->
+	<script type="text/javascript" src="libs/laya.debugtool.js"></script>
+	
 	<!-- 物理引擎matter.js -->
 	<!--用户自定义顺序文件添加到这里-->
 	<script type="text/javascript" src="../protobuf/library/protobuf-library.js"></script>
@@ -55,27 +58,59 @@
 	<!--删除标签，ide不会自动添加js文件，请谨慎操作-->
 	<!--jsfile--startTag-->
 	<script src="js/view/PanelEnum.js"></script>
+	<script src="js/utils/TypeUtil.js"></script>
 	<script src="js/proxy/ProtobuffProxy.js"></script>
-	<script src="js/managers/WindowManager.js"></script>
+	<script src="js/proxy/HttpProxy.js"></script>
 	<script src="js/managers/NetManager.js"></script>
 	<script src="js/lang/Lang.js"></script>
+	<script src="js/GameConfig.js"></script>
 	<script src="js/core/IUpdate.js"></script>
+	<script src="js/core/ISerializable.js"></script>
 	<script src="js/core/IReactive.js"></script>
 	<script src="js/core/IDispose.js"></script>
 	<script src="js/core/IData.js"></script>
+	<script src="js/core/Http.js"></script>
 	<script src="js/core/EventType.js"></script>
 	<script src="js/core/EventEmitter.js"></script>
+	<script src="js/core/PageSocket.js"></script>
 	<script src="js/managers/EventManager.js"></script>
 	<script src="js/managers/LoginManager.js"></script>
 	<script src="js/managers/ProjectManager.js"></script>
+	<script src="js/managers/SubstanceManager.js"></script>
+	<script src="js/managers/WindowManager.js"></script>
 	<script src="js/models/Model.js"></script>
 	<script src="js/models/Account.js"></script>
+	<script src="js/models/Directory.js"></script>
 	<script src="js/models/Group.js"></script>
+	<script src="js/models/Mesh.js"></script>
+	<script src="js/models/Prefab.js"></script>
 	<script src="js/models/Project.js"></script>
 	<script src="js/models/Register.js"></script>
+	<script src="js/models/Repository.js"></script>
+	<script src="js/models/ResGroup.js"></script>
+	<script src="js/models/Substance.js"></script>
+	<script src="js/models/SubstanceArgs.js"></script>
+	<script src="js/models/SubstanceExtra.js"></script>
+	<script src="js/proxy/WebNetMessage.js"></script>
 	<script src="js/ui/layaUI.max.all.js"></script>
+	<script src="js/view/alerts/CreateResGroupAlert.js"></script>
 	<script src="js/view/alerts/EulaAlert.js"></script>
+	<script src="js/view/elements/BackgoundView.js"></script>
+	<script src="js/view/elements/CustomInput.js"></script>
+	<script src="js/view/elements/CustomProgressBar.js"></script>
+	<script src="js/view/elements/CustomTextArea.js"></script>
+	<script src="js/view/elements/DirectoryTree.js"></script>
+	<script src="js/view/elements/DirectoryTreeItem.js"></script>
+	<script src="js/view/elements/EditorView.js"></script>
+	<script src="js/view/elements/Preview2DView.js"></script>
+	<script src="js/view/elements/Preview3DView.js"></script>
 	<script src="js/view/elements/RegisterInput.js"></script>
+	<script src="js/view/elements/RepositoryTree.js"></script>
+	<script src="js/view/elements/ResItem.js"></script>
+	<script src="js/view/elements/ResView.js"></script>
+	<script src="js/view/elements/UploadButton.js"></script>
+	<script src="js/view/elements/UploadView.js"></script>
+	<script src="js/view/elements/VerificationCodeComponent.js"></script>
 	<script src="js/view/views/FindPwdView.js"></script>
 	<script src="js/view/views/LoginView.js"></script>
 	<script src="js/view/views/MainView.js"></script>

@@ -55,6 +55,7 @@ export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
 
                 if ( pbrMaterial.environmentTexture != null )
                     pbrMaterial.environmentTexture.dispose();
+
             }
         }
     }
@@ -69,7 +70,7 @@ export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
 
     public updateTexture( node: TextureNode ): void
     {
-        if ( node.mesh.mesh != null )
+        if ( node.mesh.mesh != null && node.mesh.mesh.subMeshes != null )
         {
             let subMeshCount = node.mesh.mesh.subMeshes.length;
 
@@ -106,27 +107,38 @@ export class TextureRenderSystem extends ListIteratingSystem<TextureNode>
         if ( pbrMaterial.baseTexture != null )
             pbrMaterial.baseTexture.dispose();
 
-        if ( texData.baseTexPath != null && texData.baseTexPath != null && texData.baseTexPath != "" )
+        if ( texData.baseTexPath != null && texData.baseTexPath != "" )
             pbrMaterial.baseTexture = new Texture( texData.baseTexPath, scene );
 
         if ( pbrMaterial.normalTexture != null )
             pbrMaterial.normalTexture.dispose();
 
-        if ( texData.normalTexPath != null && texData.normalTexPath != null && texData.normalTexPath != "" )
+        if ( texData.normalTexPath != null && texData.normalTexPath != "" )
             pbrMaterial.normalTexture = new Texture( texData.normalTexPath, scene );
 
         if ( pbrMaterial.metallicRoughnessTexture != null )
             pbrMaterial.metallicRoughnessTexture.dispose();
 
-        if ( texData.metroughTexPath != null && texData.metroughTexPath != null && texData.metroughTexPath != "" )
+        if ( texData.metroughTexPath != null && texData.metroughTexPath != "" )
             pbrMaterial.metallicRoughnessTexture = new Texture( texData.metroughTexPath, scene );
 
         if ( pbrMaterial.environmentTexture != null )
             pbrMaterial.environmentTexture.dispose();
 
-        if ( texData.environmentTexPath != null && texData.environmentTexPath != null && texData.environmentTexPath != "" )
+        if ( texData.environmentTexPath != null && texData.environmentTexPath != "" )
             pbrMaterial.environmentTexture = new Texture( texData.environmentTexPath, scene );
 
+        if ( pbrMaterial.occlusionTexture != null )
+            pbrMaterial.occlusionTexture.dispose();
+
+        if ( texData.occlusionTexPath != null && texData.occlusionTexPath != "" )
+            pbrMaterial.occlusionTexture = new Texture( texData.occlusionTexPath, scene );
+
+        if ( pbrMaterial.emissiveTexture != null )
+            pbrMaterial.emissiveTexture.dispose();
+
+        if ( texData.emissiveTexPath != null && texData.emissiveTexPath != "" )
+            pbrMaterial.emissiveTexture = new Texture( texData.emissiveTexPath, scene );
 
         mesh.material = pbrMaterial;
         texData.needUpdate = false;

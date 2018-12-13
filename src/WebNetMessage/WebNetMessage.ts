@@ -72,10 +72,11 @@ export class MeshList extends MessageInfo
         if ( array == null )
             return;
 
-        for ( let i: number = 0; i <= array.length; i++ )
+        for ( let i: number = 0; i < array.length; i++ )
         {
             let data: any = array[ i ];
             let meshInfo: MeshInfo = new MeshInfo();
+            console.log( data );
             meshInfo.fromObj( data );
             this.meshList.push( meshInfo );
         }
@@ -105,28 +106,36 @@ export class MaterialID extends MessageInfo
 }
 export class TextureInfo extends MessageInfo
 {
-    public baseTexPath: string;     // baseTexPath
-    public normalTexPath: string;   // normalTexPath
-    public metroughTexPath: string; // metroughTexPath
-    public environmentTexPath: string;  // environmentTexPath
+    // public baseTexPath: string;     // baseTexPath
+    // public normalTexPath: string;   // normalTexPath
+    // public metroughTexPath: string; // metroughTexPath
+    // public environmentTexPath: string;  // environmentTexPath
+
+    public texPaths: Map<string, string>;
 
 
     public constructor( baseTex: string = "", normalTex: string = "", metroughTex: string = "", environmentTex: string = "" )
     {
         super();
-        this.baseTexPath = baseTex;
-        this.normalTexPath = normalTex;
-        this.metroughTexPath = metroughTex;
-        this.environmentTexPath = environmentTex;
+        // this.baseTexPath = baseTex;
+        // this.normalTexPath = normalTex;
+        // this.metroughTexPath = metroughTex;
+        // this.environmentTexPath = environmentTex;
+        this.texPaths = new Map<string, string>();
     }
 
 
     public fromObj( obj: any ): void
     {
-        this.baseTexPath = obj.baseTexPath;
-        this.normalTexPath = obj.normalTexPath;
-        this.metroughTexPath = obj.metroughTexPath;
-        this.environmentTexPath = obj.environmentTexPath;
+        // this.baseTexPath = obj.baseTexPath;
+        // this.normalTexPath = obj.normalTexPath;
+        // this.metroughTexPath = obj.metroughTexPath;
+        // this.environmentTexPath = obj.environmentTexPath;
+
+        ( obj.texPaths as Map<string, string> ).forEach( ( value: string, key: string ): void =>
+        {
+            this.texPaths.set( key, value );
+        } );
     }
 
 }

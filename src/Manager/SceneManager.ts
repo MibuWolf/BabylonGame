@@ -28,18 +28,20 @@ export class SceneManager
         this.m_scene = new Scene( this.m_engine );
 
         let camTarget = BABYLON.Vector3.Zero().clone();
-        camTarget.y = 5;
+        camTarget.y = 0;
         this.m_camera = new ArcRotateCamera( "Camera", 0, Math.PI / 10, 10, camTarget, this.m_scene );
         this.m_camera.attachControl( this.m_canvas, true );
-        this.m_camera.setTarget( new Vector3( 0, 40, 0 ) );
-        this.m_camera.wheelDeltaPercentage /= 5;
+        this.m_camera.setTarget( new Vector3( 0, 0, 0 ) );
+        this.m_camera.wheelPrecision = 20;
+        this.m_camera.speed = 0.25;
+        this.m_camera.minZ = 0.01;
 
         var light1: BABYLON.DirectionalLight = new DirectionalLight( "light1", new Vector3( 1, -1, 0 ), this.m_scene );
         var light2: BABYLON.DirectionalLight = new DirectionalLight( "light2", new Vector3( 1, 0, 0 ), this.m_scene );
         var light2: DirectionalLight = new DirectionalLight( "light3", new Vector3( 1, 0, 1 ), this.m_scene );
         light1.diffuse = new BABYLON.Color3( 10, 10, 10 );
 
-        //this.m_scene.debugLayer.show();
+        this.m_scene.debugLayer.show();
     }
 
     public GetScene(): Scene

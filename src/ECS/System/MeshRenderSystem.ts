@@ -2,7 +2,7 @@ import { ListIteratingSystem } from '../../ash';
 import { MeshRenderNode } from '../Nodes/MeshRenderNode';
 import { SceneManager } from '../../Manager/SceneManager';
 import 'babylonjs-loaders';
-import { SceneLoader } from 'babylonjs';
+import { SceneLoader, AbstractMesh } from 'babylonjs';
 
 export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
 {
@@ -22,8 +22,19 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
 
         SceneLoader.ImportMesh( "", node.mesh.GetMeshPath(), node.mesh.GetMeshName(), scene, function ( newMeshes )
         {
-            var meshModel = newMeshes[ 0 ];
+            let meshModel: AbstractMesh = newMeshes[ 0 ];
 
+            let count = newMeshes.length;
+
+            for ( let i = 0; i < count; ++i )
+            {
+                let mesh: AbstractMesh = newMeshes[ i ];
+
+                if ( mesh != null && mesh.subMeshes != null )
+                    meshModel = mesh;
+            }
+
+            console.log( "MeshRenderSystem ================================= ImportMesh Path: " + node.mesh.GetMeshPath() + "  Name: " + node.mesh.GetMeshName() );
             if ( meshModel != null )
             {
                 meshModel.position.x = node.mesh.GetPositionX()
@@ -31,6 +42,9 @@ export class MeshRenderSystem extends ListIteratingSystem<MeshRenderNode>
                 meshModel.position.z = node.mesh.GetPositionZ();
                 node.mesh.mesh = meshModel;
 
+                // let stdMat: StandardMaterial = new StandardMaterial( "aaa", scene );
+                // stdMat.diffuseTexture = new Texture( "http://172.16.1.150/resource/obj_file?obj_id=78805a221a988e79ef3f42d7c5bfd418", scene );//"http://172.16.1.110/bin/dist/Asset/male_sd_0001_tunic_male_sd_0001_tunic_spec.bmp", scene );
+                // node.mesh.mesh.material = stdMat;
             }
             else
             {
